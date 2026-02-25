@@ -1,0 +1,35 @@
+---
+interface Props {
+  node: {
+    url?: string;
+    caption?: string;
+  };
+}
+
+const { node } = Astro.props;
+
+// suporta /watch?v=, youtu.be/ e /shorts/
+function extractYouTubeId(url: string): string | null {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/))([\w-]{11})/);
+  return match ? match[1] : null;
+}
+
+const videoId = node.url ? extractYouTubeId(node.url) : null;
+---
+
+{
+  videoId && (
+    <figure class="my-8 flex flex-col items-center">
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+        title={node.caption || "YouTube video"}
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+        class="w-full rounded-xl shadow-md aspect-video bg-zinc-900"
+      />
+      {node.caption && <figcaption class="text-sm text-zinc-500 mt-3 text-center italic">{node.caption}</figcaption>}
+    </figure>
+  )
+}

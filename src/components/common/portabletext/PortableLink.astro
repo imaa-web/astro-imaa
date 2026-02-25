@@ -1,0 +1,44 @@
+---
+interface MarkDef {
+  href?: string;
+  blank?: boolean;
+}
+
+interface Props {
+  node: {
+    markDef?: MarkDef;
+  };
+}
+
+const { node } = Astro.props;
+
+const markDef = node?.markDef;
+const href = (markDef?.href || "").trim();
+
+const SAFE_SCHEMES = ["https://", "mailto:", "tel:", "#", "./", "../"];
+const isSafeHref =
+  href !== "" && (SAFE_SCHEMES.some((s) => href.startsWith(s)) || (href.startsWith("/") && !href.startsWith("//")));
+const safeHref = href === "" ? null : isSafeHref ? href : "";
+
+const isExternal = href.startsWith("https://");
+const shouldOpenInNewTab = markDef?.blank !== undefined ? markDef.blank : isExternal;
+---
+
+{
+  safeHref === null ? (
+    <slot />
+  ) : safeHref ? (
+    <a
+      href={safeHref}
+      target={shouldOpenInNewTab ? "_blank" : undefined}
+      rel={shouldOpenInNewTab || isExternal ? "noopener noreferrer" : undefined}
+      class="font-medium text-blue-600 underline decoration-blue-300 underline-offset-4 hover:decoration-blue-600 transition-all"
+    >
+      <slot />
+    </a>
+  ) : (
+    <span class="text-red-500 line-through cursor-not-allowed" title="Link inseguro bloqueado">
+      <slot />
+    </span>
+  )
+}

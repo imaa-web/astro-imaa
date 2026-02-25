@@ -1,0 +1,45 @@
+---
+import { urlFor } from "@/lib/sanity-client";
+import type { SanityImageBase } from "@/lib/sanity-derived-types";
+
+interface Props {
+  node: {
+    videoFile?: {
+      url: string;
+      mimeType?: string;
+    };
+    posterImage?: SanityImageBase;
+    caption?: string;
+  };
+}
+
+const { node } = Astro.props;
+const videoUrl = node.videoFile?.url;
+
+const posterUrl = node.posterImage ? urlFor(node.posterImage).auto("format").width(1200).quality(80).url() : undefined;
+---
+
+{
+  videoUrl && (
+    <figure class="my-8 flex flex-col items-center">
+      <video
+        poster={posterUrl}
+        controls
+        preload="metadata"
+        playsinline
+        aria-label={node.caption ? undefined : "Vídeo"}
+        aria-labelledby={node.caption ? "video-caption" : undefined}
+        class="w-full rounded-xl shadow-md bg-zinc-900"
+      >
+        <source src={videoUrl} type={node.videoFile?.mimeType || undefined} />
+        Seu navegador não suporta a tag de vídeo.
+      </video>
+
+      {node.caption && (
+        <figcaption id="video-caption" class="text-sm text-center text-zinc-500 mt-3 italic">
+          {node.caption}
+        </figcaption>
+      )}
+    </figure>
+  )
+}

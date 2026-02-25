@@ -1,0 +1,24 @@
+---
+import SanityImage from "@/components/common/SanityImage.tsx";
+import type { SanityImageBase } from "@/lib/sanity-derived-types";
+
+interface Props {
+  node?: SanityImageBase;
+}
+
+const { node } = Astro.props;
+---
+
+{
+  node?.asset && (
+    <figure class="my-8 flex flex-col items-center">
+      <SanityImage
+        image={node}
+        className="rounded-xl shadow-md w-full h-auto"
+        sizes="(max-width: 800px) 100vw, 800px"
+      />
+
+      {node.caption && <figcaption class="text-sm text-center text-zinc-500 mt-3 italic">{node.caption}</figcaption>}
+    </figure>
+  )
+}
