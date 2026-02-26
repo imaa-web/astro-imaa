@@ -1,8 +1,8 @@
 // ============================================================================
 // Image Types - Base types (manual, since structure is consistent across all image types)
 // ============================================================================
-//TODO: trocar imports pelos gerados no typegen
-import type { SanityImageCrop, SanityImageHotspot } from "@sanity/image-url";
+
+import type { ALL_PAGES_QUERY_RESULT, SanityImageCrop, SanityImageHotspot } from "@/lib/sanity.types";
 
 /** Sanity asset with projected metadata from GROQ queries */
 export interface ProjectedSanityAsset {
@@ -28,3 +28,13 @@ export interface SanityImageBase {
   hotspot?: SanityImageHotspot | null;
   crop?: SanityImageCrop | null;
 }
+
+// ============================================================================
+// Page Builder derived types
+// ============================================================================
+
+export type PageBuilder = NonNullable<ALL_PAGES_QUERY_RESULT>[number]["pageBuilder"];
+export type PageBuilderBlock = NonNullable<PageBuilder>[number];
+export type PageBuilderBlockType = PageBuilderBlock["_type"];
+
+export type PageBuilderBlockOf<T extends PageBuilderBlockType> = Extract<PageBuilderBlock, { _type: T }>;
