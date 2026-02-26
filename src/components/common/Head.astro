@@ -1,0 +1,56 @@
+---
+import { DEFAULT_TITLE } from "@/lib/constants";
+import { urlFor } from "@/lib/sanity-client";
+import type { SanityImageBase } from "@/lib/sanity-derived-types";
+import { getEntry } from "astro:content";
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  image?: SanityImageBase | null;
+}
+
+const siteSettingsData = await getEntry("siteSettings", "site-settings");
+const siteSettings = siteSettingsData?.data;
+
+const { title, description, canonical, image } = Astro.props;
+
+const canonicalURL =
+  canonical ||
+  (Astro.site ? new URL(Astro.url.pathname, Astro.site).href : new URL(Astro.url.pathname, Astro.url.origin).href);
+
+// Na home, o título do site aparece primeiro; nas demais páginas, o sufixo vai ao final
+const isHomePage = Astro.url.pathname === "/";
+
+const finalTitle = isHomePage ? `${DEFAULT_TITLE} | ${title}` : `${title} | ${DEFAULT_TITLE}`;
+
+const ogImage = image?.asset
+  ? urlFor(image).width(1200).height(630).fit("crop").auto("format").url()
+  : siteSettings?.logo?.asset
+    ? urlFor(siteSettings.logo).width(1200).height(630).fit("crop").auto("format").url()
+    : null;
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="canonical" href={canonicalURL} />
+<link rel="icon" href="/favicon.ico" />
+<meta name="generator" content={Astro.generator} />
+<title>{finalTitle}</title>
+<meta name="description" content={description} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={DEFAULT_TITLE} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={finalTitle} />
+<meta property="og:description" content={description} />
+{ogImage && <meta property="og:image" content={ogImage} />}
+
+<!-- Twitter -->
+<meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
+<meta name="twitter:url" content={canonicalURL} />
+<meta name="twitter:title" content={finalTitle} />
+<meta name="twitter:description" content={description} />
+{ogImage && <meta name="twitter:image" content={ogImage} />}
