@@ -1,0 +1,26 @@
+---
+import type { PageBuilderBlockOf } from "@/lib/sanity-derived-types";
+
+type Props = PageBuilderBlockOf<"youtubeEmbed">;
+
+const { caption, url } = Astro.props;
+const videoId = url?.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([\w-]+)/)?.[1];
+---
+
+{
+  url && videoId && (
+    <figure class="my-8 flex flex-col items-center px-4">
+      <div class="w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-md">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+          title={caption || "YouTube video"}
+          class="w-full h-full"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        />
+      </div>
+      {caption && <figcaption class="text-sm text-center text-zinc-500 mt-3 italic">{caption}</figcaption>}
+    </figure>
+  )
+}

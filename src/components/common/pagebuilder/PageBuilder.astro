@@ -1,0 +1,47 @@
+---
+import type { ALL_PAGES_QUERY_RESULT } from "@/lib/sanity.types";
+import CallToAction from "./CallToAction.astro";
+import DownloadableFile from "./DownloadableFile.astro";
+import Form from "./Form.astro";
+import Gallery from "./Gallery.astro";
+import Hero from "./Hero.astro";
+import TextWithIllustration from "./TextWithIllustration.astro";
+import VideoFile from "./VideoFile.astro";
+import YoutubeEmbed from "./YoutubeEmbed.astro";
+
+interface Props {
+  pageBuilder?: NonNullable<ALL_PAGES_QUERY_RESULT>[number]["pageBuilder"];
+}
+
+const { pageBuilder } = Astro.props;
+---
+
+{
+  pageBuilder?.map((block) => {
+    switch (block._type) {
+      case "hero":
+        return <Hero {...block} />;
+      case "textWithIllustration":
+        return <TextWithIllustration {...block} />;
+      case "gallery":
+        return <Gallery {...block} />;
+      case "videoFile":
+        return <VideoFile {...block} />;
+      case "youtubeEmbed":
+        return <YoutubeEmbed {...block} />;
+      case "downloadableFile":
+        return <DownloadableFile {...block} />;
+      case "form":
+        return <Form {...block} />;
+      case "callToAction":
+        return <CallToAction {...block} />;
+      case "horizontalRule":
+        return <hr />;
+      default:
+        if (import.meta.env.DEV) {
+          console.warn(`Unknown pageBuilder block type: ${(block as { _type: string })._type}`);
+        }
+        return null;
+    }
+  })
+}

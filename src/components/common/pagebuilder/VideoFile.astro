@@ -1,0 +1,28 @@
+---
+import { urlFor } from "@/lib/sanity-client";
+import type { PageBuilderBlockOf } from "@/lib/sanity-derived-types";
+
+type Props = PageBuilderBlockOf<"videoFile">;
+
+const { file, posterImage, caption } = Astro.props;
+const videoUrl = file?.url;
+const posterUrl = posterImage ? urlFor(posterImage).auto("format").width(1200).quality(80).url() : undefined;
+---
+
+{
+  videoUrl && (
+    <figure class="my-8 flex flex-col items-center px-4">
+      <video
+        poster={posterUrl}
+        controls
+        preload="metadata"
+        playsinline
+        class="w-full max-w-4xl rounded-xl shadow-md bg-zinc-900"
+      >
+        <source src={videoUrl} type={(file?.mimeType as string) || undefined} />
+        Seu navegador não suporta a tag de vídeo.
+      </video>
+      {caption && <figcaption class="text-sm text-center text-zinc-500 mt-3 italic">{caption}</figcaption>}
+    </figure>
+  )
+}
