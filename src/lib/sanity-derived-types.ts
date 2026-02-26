@@ -2,7 +2,12 @@
 // Image Types - Base types (manual, since structure is consistent across all image types)
 // ============================================================================
 
-import type { ALL_PAGES_QUERY_RESULT, SanityImageCrop, SanityImageHotspot } from "@/lib/sanity.types";
+import type {
+  ALL_PAGES_QUERY_RESULT,
+  SanityImageCrop,
+  SanityImageHotspot,
+  SITE_SETTINGS_QUERY_RESULT,
+} from "@/lib/sanity.types";
 
 /** Sanity asset with projected metadata from GROQ queries */
 export interface ProjectedSanityAsset {
@@ -38,3 +43,35 @@ export type PageBuilderBlock = NonNullable<PageBuilder>[number];
 export type PageBuilderBlockType = PageBuilderBlock["_type"];
 
 export type PageBuilderBlockOf<T extends PageBuilderBlockType> = Extract<PageBuilderBlock, { _type: T }>;
+
+// ============================================================================
+// Menu Types - derived from TypeGen query results
+// ============================================================================
+
+/** Menu item from mainMenu or footerMenu queries */
+export type QueryMenuItem = NonNullable<NonNullable<SITE_SETTINGS_QUERY_RESULT>["mainMenu"]["items"]>[number];
+
+// ============================================================================
+// Social & Contact Types - derived from TypeGen
+// ============================================================================
+
+/** Social link from site settings */
+export type QuerySocialLink = NonNullable<NonNullable<SITE_SETTINGS_QUERY_RESULT>["socialLinks"]>[number];
+
+/** Available social platforms */
+export type SocialMediaPlatforms = NonNullable<QuerySocialLink["platform"]>;
+
+/** Contact info from site settings */
+export type QueryContactInfo = NonNullable<SITE_SETTINGS_QUERY_RESULT>["contactInfo"];
+
+/** Individual phone item from contact info */
+export type QueryPhoneItem = NonNullable<NonNullable<QueryContactInfo>["phones"]>[number];
+
+/** Individual email item from contact info */
+export type QueryEmailItem = NonNullable<NonNullable<QueryContactInfo>["emails"]>[number];
+
+/** Keys of contact info */
+export type QueryContactInfoKeys = keyof NonNullable<QueryContactInfo>;
+
+/** Data type for each contact info key */
+export type ContactInfoValue = NonNullable<QueryContactInfo>[QueryContactInfoKeys];

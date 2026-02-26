@@ -97,70 +97,9 @@ export type SanityImageHotspot = {
   width?: number;
 };
 
-export type HomePage = {
-  _id: string;
-  _type: "homePage";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  excerpt?: string;
-  heroText?: BlockContent;
-};
-
-export type BlockContent = Array<
-  | {
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        href?: string;
-        blank?: boolean;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }
-  | {
-      asset?: SanityImageAssetReference;
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      caption?: string;
-      _type: "image";
-      _key: string;
-    }
-  | ({
-      _key: string;
-    } & HorizontalRule)
-  | ({
-      _key: string;
-    } & DownloadableFile)
-  | ({
-      _key: string;
-    } & VideoFile)
-  | ({
-      _key: string;
-    } & YoutubeEmbed)
->;
-
 export type SocialLink = {
   _type: "socialLink";
-  platform?:
-    | "instagram"
-    | "facebook"
-    | "youtube"
-    | "whatsapp"
-    | "twitter"
-    | "linkedin";
+  platform?: "instagram" | "facebook" | "youtube" | "twitter" | "bluesky";
   url?: string;
   label?: string;
 };
@@ -218,6 +157,50 @@ export type DownloadableFile = {
   label?: string;
   title?: string;
 };
+
+export type BlockContent = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+      listItem?: "bullet" | "number";
+      markDefs?: Array<{
+        href?: string;
+        blank?: boolean;
+        _type: "link";
+        _key: string;
+      }>;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }
+  | {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      caption?: string;
+      _type: "image";
+      _key: string;
+    }
+  | ({
+      _key: string;
+    } & HorizontalRule)
+  | ({
+      _key: string;
+    } & DownloadableFile)
+  | ({
+      _key: string;
+    } & VideoFile)
+  | ({
+      _key: string;
+    } & YoutubeEmbed)
+>;
 
 export type HorizontalRule = {
   _type: "horizontalRule";
@@ -284,15 +267,33 @@ export type PageReference = {
   [internalGroqTypeReferenceTo]?: "page";
 };
 
+export type HomePageReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "homePage";
+};
+
 export type MenuItem = {
   _type: "menuItem";
-  pageReference?: PageReference;
+  pageReference?: PageReference | HomePageReference;
   label?: string;
   submenu?: Array<
     {
       _key: string;
     } & MenuItem
   >;
+};
+
+export type HomePage = {
+  _id: string;
+  _type: "homePage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  excerpt?: string;
+  heroText?: BlockContent;
 };
 
 export type Page = {
@@ -457,8 +458,6 @@ export type AllSanitySchemaTypes =
   | Menu
   | SanityImageCrop
   | SanityImageHotspot
-  | HomePage
-  | BlockContent
   | SocialLink
   | Form
   | CallToAction
@@ -466,13 +465,16 @@ export type AllSanitySchemaTypes =
   | VideoFile
   | YoutubeEmbed
   | DownloadableFile
+  | BlockContent
   | HorizontalRule
   | FeaturedImage
   | Gallery
   | TextWithIllustration
   | Hero
   | PageReference
+  | HomePageReference
   | MenuItem
+  | HomePage
   | Page
   | Slug
   | MediaTag
@@ -1091,11 +1093,10 @@ export type SITE_SETTINGS_QUERY_RESULT =
       socialLinks:
         | Array<{
             platform:
+              | "bluesky"
               | "facebook"
               | "instagram"
-              | "linkedin"
               | "twitter"
-              | "whatsapp"
               | "youtube"
               | null;
             url: string | null;

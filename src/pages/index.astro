@@ -1,6 +1,22 @@
 ---
 import { Button } from "@/components/ui/button";
 import Layout from "@/layouts/Layout.astro";
+import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from "@/lib/constants";
 ---
 
-<Layout> <Button>Home Btn</Button> </Layout>
+<Layout title={DEFAULT_TITLE} description={DEFAULT_DESCRIPTION}> <Button>Home Btn</Button> </Layout>
+
+<script>
+  import confetti from "canvas-confetti";
+
+  const canvas = document.getElementById("confetti-canvas") as HTMLCanvasElement;
+  const myConfetti = confetti.create(canvas, { resize: true, useWorker: true });
+
+  myConfetti({
+    particleCount: 150,
+    spread: 160,
+    origin: { y: 0 },
+    gravity: 0.5,
+    ticks: 300,
+  });
+</script>

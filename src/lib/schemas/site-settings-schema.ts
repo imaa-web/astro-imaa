@@ -1,7 +1,7 @@
 import { z } from "astro/zod";
 
 const imageSchema = z.object({
-  _type: z.string(),
+  _type: z.string().nullable().optional(),
   asset: z
     .object({
       _id: z.string(),
