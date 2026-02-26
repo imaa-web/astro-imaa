@@ -13,6 +13,7 @@ const { node } = Astro.props;
   node?.asset && (
     <figure class="my-8 flex flex-col items-center">
       <SanityImage
+        client:load
         image={node}
         className="rounded-xl shadow-md w-full h-auto"
         sizes="(max-width: 800px) 100vw, 800px"

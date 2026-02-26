@@ -4,7 +4,7 @@ import type { SanityImageBase } from "@/lib/sanity-derived-types";
 
 interface Props {
   node: {
-    videoFile?: {
+    file?: {
       url: string;
       mimeType?: string;
     };
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const { node } = Astro.props;
-const videoUrl = node.videoFile?.url;
+const videoUrl = node.file?.url;
 
 const posterUrl = node.posterImage ? urlFor(node.posterImage).auto("format").width(1200).quality(80).url() : undefined;
 ---
@@ -31,7 +31,7 @@ const posterUrl = node.posterImage ? urlFor(node.posterImage).auto("format").wid
         aria-labelledby={node.caption ? "video-caption" : undefined}
         class="w-full rounded-xl shadow-md bg-zinc-900"
       >
-        <source src={videoUrl} type={node.videoFile?.mimeType || undefined} />
+        <source src={videoUrl} type={node.file?.mimeType} />
         Seu navegador não suporta a tag de vídeo.
       </video>
 
