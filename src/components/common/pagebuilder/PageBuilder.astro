@@ -5,6 +5,8 @@ import VideoFile from "@/components/common/pagebuilder/VideoFile.astro";
 import YoutubeEmbed from "@/components/common/pagebuilder/YoutubeEmbed.astro";
 import type { ALL_PAGES_QUERY_RESULT } from "@/lib/sanity.types";
 
+//TODO: Add other page builder blocks, like rich text with variant styles
+
 interface Props {
   pageBuilder?: NonNullable<ALL_PAGES_QUERY_RESULT>[number]["pageBuilder"];
 }

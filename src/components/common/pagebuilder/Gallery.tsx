@@ -68,16 +68,14 @@ export default function Gallery({ heading, images, layout = "grid3" }: Readonly<
     return cols;
   }, [validImages, layout]);
 
+  const slides = useMemo(() => buildSlides(validImages), [validImages]);
+
   if (!validImages.length) return null;
 
-  const slides = buildSlides(validImages);
-
   return (
-    <section className="py-16 bg-background">
+    <section className="py-12 bg-background">
       <div className="container mx-auto px-4 max-w-7xl">
-        {heading && (
-          <h2 className="text-3xl md:text-4xl font-bold font-serif text-foreground mb-10 text-center">{heading}</h2>
-        )}
+        {heading && <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-10 text-center">{heading}</h2>}
 
         {/* Grid 2 */}
         {layout === "grid2" && (
