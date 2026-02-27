@@ -1,0 +1,51 @@
+---
+import Container from "@/components/layout/Container.astro";
+import FooterBottomBar from "@/components/layout/footer/FooterBottomBar.astro";
+import FooterBrand from "@/components/layout/footer/FooterBrand.astro";
+import FooterContact from "@/components/layout/footer/FooterContact.astro";
+import FooterNav from "@/components/layout/footer/FooterNav.astro";
+import { DEFAULT_TITLE } from "@/lib/constants";
+import type { QueryContactInfo, QueryMenuItem, QuerySocialLink } from "@/lib/sanity-derived-types";
+import { getEntry } from "astro:content";
+
+const siteSettings = await getEntry("siteSettings", "site-settings");
+
+const title = siteSettings?.data.title || DEFAULT_TITLE;
+const footerMenu = siteSettings?.data.footerMenu || { label: "", items: [] };
+const menuItems: QueryMenuItem[] = (footerMenu.items ?? []).map((item) => ({
+  ...item,
+  submenu: item.submenu ?? null,
+}));
+const socialLinks = (siteSettings?.data.socialLinks ?? []) as QuerySocialLink[];
+const contactInfo = siteSettings?.data.contactInfo as QueryContactInfo | null;
+---
+
+<footer class="bg-primary-dark text-primary-foreground">
+  <div class="h-1 w-full bg-linear-to-r from-primary via-secondary via-50% to-accent"></div>
+
+  <Container size="xl" class="py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10">
+      <div class="col-span-1 sm:col-span-2 lg:col-span-5">
+        <FooterBrand description={siteSettings?.data.description} socialLinks={socialLinks} />
+      </div>
+
+      {
+        menuItems.length > 0 && (
+          <div class="col-span-1 sm:col-span-1 lg:col-span-2 lg:col-start-8">
+            <FooterNav label={footerMenu.label || "Navegação"} items={menuItems} />
+          </div>
+        )
+      }
+
+      {
+        contactInfo && (
+          <div class="col-span-1 sm:col-span-1 lg:col-span-4 lg:col-start-10 min-w-0">
+            <FooterContact contactInfo={contactInfo} />
+          </div>
+        )
+      }
+    </div>
+  </Container>
+
+  <FooterBottomBar title={title} />
+</footer>

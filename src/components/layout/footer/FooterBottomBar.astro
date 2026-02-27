@@ -1,0 +1,23 @@
+---
+import Container from "@/components/layout/Container.astro";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+const currentYear = new Date().getFullYear();
+---
+
+<div class="border-t border-white/10">
+  <Container size="xl" class="py-5 flex items-center justify-center gap-1.5 flex-wrap">
+    <p class="text-xs text-white/50 font-sans text-center">© {currentYear} {title}</p>
+    <span class="text-white/20 text-xs" aria-hidden="true">·</span>
+    <a
+      href="/politica-de-privacidade"
+      class="text-xs text-white/50 hover:text-secondary transition-colors font-sans underline underline-offset-2"
+    >
+      Política de Privacidade
+    </a>
+  </Container>
+</div>

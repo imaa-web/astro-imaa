@@ -1,0 +1,77 @@
+---
+import WhatsAppIcon from "@/components/icons/WhatsAppIcon";
+import type { QueryContactInfo } from "@/lib/sanity-derived-types";
+import { Mail, MapPin, Phone } from "lucide-react";
+
+interface Props {
+  contactInfo: QueryContactInfo;
+}
+
+const { contactInfo } = Astro.props;
+---
+
+<div>
+  <h3 class="text-sm font-bold uppercase tracking-widest text-secondary mb-4 font-sans">Contato</h3>
+  <ul class="space-y-3">
+    {
+      contactInfo.address && (
+        <li class="flex items-start gap-2">
+          <MapPin className="w-5 h-5 text-secondary mt-0.5 shrink-0" />
+          <div class="text-sm text-primary-foreground/80 font-sans">
+            {contactInfo.address.street && (
+              <p>
+                {contactInfo.address.street}
+                {contactInfo.address.complement && `, ${contactInfo.address.complement}`}
+              </p>
+            )}
+            {contactInfo.address.neighborhood && (
+              <p>
+                {contactInfo.address.neighborhood}
+                {contactInfo.address.cityState && ` - ${contactInfo.address.cityState}`}
+              </p>
+            )}
+            {contactInfo.address.zipCode && <p class="text-primary-foreground/60">{contactInfo.address.zipCode}</p>}
+          </div>
+        </li>
+      )
+    }
+
+    {
+      contactInfo.emails
+        ?.filter((item) => item.address)
+        .map((item) => (
+          <li class="flex items-center gap-2">
+            <Mail className="w-5 h-5 text-secondary shrink-0" />
+            <a
+              href={`mailto:${item.address}`}
+              class="text-sm text-primary-foreground/80 hover:text-secondary transition-colors font-sans break-all"
+            >
+              {item.address}
+            </a>
+          </li>
+        ))
+    }
+
+    {
+      contactInfo.phones
+        ?.filter((item) => item.number)
+        .map((item) => (
+          <li class="flex items-center gap-2">
+            {item.isWhatsApp ? (
+              <WhatsAppIcon className="w-5 h-5 text-secondary shrink-0" />
+            ) : (
+              <Phone className="w-5 h-5 text-secondary shrink-0" />
+            )}
+            <a
+              href={item.isWhatsApp ? `https://wa.me/${item.number?.replace(/\D/g, "")}` : `tel:${item.number}`}
+              target={item.isWhatsApp ? "_blank" : undefined}
+              rel={item.isWhatsApp ? "noopener noreferrer" : undefined}
+              class="text-sm text-primary-foreground/80 hover:text-secondary transition-colors font-sans"
+            >
+              {item.number}
+            </a>
+          </li>
+        ))
+    }
+  </ul>
+</div>
