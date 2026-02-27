@@ -26,6 +26,7 @@
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.6.0",
     "groq": "^5.12.0",
     "lucide-react": "^0.575.0",
     "motion": "^12.34.3",
@@ -35,7 +36,8 @@
     "sanity-image": "^1.1.0",
     "sharp": "^0.34.5",
     "tailwind-merge": "^3.5.0",
-    "tailwindcss": "^4.2.1"
+    "tailwindcss": "^4.2.1",
+    "yet-another-react-lightbox": "^3.29.1"
   },
   "devDependencies": {
     "@portabletext/types": "^4.0.1",
