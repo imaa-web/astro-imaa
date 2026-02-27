@@ -100,13 +100,13 @@ export default function Navbar({ currentPath, menuItems, socialLinks }: Readonly
           <a href="/" className="flex items-center gap-3 group min-w-48">
             <img
               src={logoPlaceholder.src}
-              width={40}
-              height={40}
-              className="w-10 h-10 rounded-full object-cover"
-              alt="Logo Instituto Mestre Abiud"
+              width={56}
+              height={56}
+              className="w-14 h-14 rounded-full object-cover"
+              alt="Logo Instituto Maestro Abiud"
             />
             <div>
-              <p className="text-xs font-semibold text-accent uppercase tracking-wide font-sans">Instituto Mestre</p>
+              <p className="text-xs font-semibold text-accent uppercase tracking-wide font-sans">Instituto Maestro</p>
               <p className="text-xl font-bold text-primary font-serif leading-tight">Abiud Almeida</p>
             </div>
           </a>
