@@ -1,22 +1,24 @@
 ---
-import { Button } from "@/components/ui/button";
+import HeroSection from "@/components/features/home/HeroSection.astro";
 import Layout from "@/layouts/Layout.astro";
-import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from "@/lib/constants";
+import { DEFAULT_DESCRIPTION } from "@/lib/constants";
 ---
 
-<Layout title={DEFAULT_TITLE} description={DEFAULT_DESCRIPTION}> <Button>Home Btn</Button> </Layout>
+<Layout title="Início" description={DEFAULT_DESCRIPTION}>
+  <HeroSection />
 
-<script>
-  import confetti from "canvas-confetti";
+  <script>
+    import confetti from "canvas-confetti";
 
-  const canvas = document.getElementById("confetti-canvas") as HTMLCanvasElement;
-  const myConfetti = confetti.create(canvas, { resize: true, useWorker: true });
+    const canvas = document.getElementById("confetti-canvas") as HTMLCanvasElement;
+    const myConfetti = confetti.create(canvas, { resize: true, useWorker: true });
 
-  myConfetti({
-    particleCount: 150,
-    spread: 160,
-    origin: { y: 0 },
-    gravity: 0.5,
-    ticks: 300,
-  });
-</script>
+    myConfetti({
+      particleCount: 150,
+      spread: 160,
+      origin: { y: 0 },
+      gravity: 0.5,
+      ticks: 300,
+    });
+  </script>
+</Layout>

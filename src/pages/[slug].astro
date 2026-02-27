@@ -1,12 +1,16 @@
 ---
 import PageBuilder from "@/components/common/pagebuilder/PageBuilder.astro";
 import PortableTextRenderer from "@/components/common/PortableTextRenderer.astro";
+import Container from "@/components/layout/Container.astro";
+import PageSection from "@/components/layout/PageSection.astro";
+import PageHero from "@/components/sections/PageHero.astro";
 import Layout from "@/layouts/Layout.astro";
+import { DEFAULT_TITLE } from "@/lib/constants";
 import { loadQuery } from "@/lib/load-query";
-import { ALL_PAGES_QUERY } from "@/lib/queries";
+import { ALL_PAGES_QUERY } from "@/lib/queries/page";
 import { type ALL_PAGES_QUERY_RESULT } from "@/lib/sanity.types";
+import { truncateExcerpt } from "@/lib/utils/string-utils";
 import type { GetStaticPaths } from "astro";
-import galeria4 from "../assets/galeria-4.jpg";
 
 export const getStaticPaths = (async () => {
   const { data: pages } = await loadQuery<ALL_PAGES_QUERY_RESULT>({
@@ -24,19 +28,12 @@ export const getStaticPaths = (async () => {
 const { page } = Astro.props;
 ---
 
-<Layout title={page.title ?? ""} description={page.excerpt ?? ""}>
-  {
-    page.title && (
-      <div style={`background-image: url(${galeria4.src})`} class="bg-no-repeat bg-center bg-cover">
-        <div class="bg-primary/80 py-20">
-          <h1 class="text-4xl md:text-5xl font-bold text-center text-primary-foreground">{page.title}</h1>
-        </div>
-      </div>
-    )
-  }
-
-  <section class="container mx-auto py-16 max-w-3xl">
-    <PortableTextRenderer value={page.content} />
-    <PageBuilder pageBuilder={page.pageBuilder} />
-  </section>
+<Layout title={page.title ?? DEFAULT_TITLE} description={truncateExcerpt(page.excerpt ?? page.autoExcerpt)}>
+  <PageHero heading={page.hero?.heading ?? page.title ?? DEFAULT_TITLE} tagline={page.hero?.tagline} />
+  <PageSection>
+    <Container size="md" class="mb-12">
+      <PortableTextRenderer value={page.content} />
+      <PageBuilder pageBuilder={page.pageBuilder} />
+    </Container>
+  </PageSection>
 </Layout>
