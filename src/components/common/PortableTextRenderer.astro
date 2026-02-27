@@ -5,14 +5,16 @@ import PortableImage from "@/components/common/portabletext/PortableImage.astro"
 import PortableLink from "@/components/common/portabletext/PortableLink.astro";
 import PortableVideoFile from "@/components/common/portabletext/PortableVideoFile.astro";
 import PortableYoutubeEmbed from "@/components/common/portabletext/PortableYoutubeEmbed.astro";
+import { cn } from "@/lib/utils/ui-utils";
 import { PortableText } from "astro-portabletext";
 import type { PortableTextProps } from "astro-portabletext/types";
 
 interface Props {
   value?: PortableTextProps["value"] | null;
+  class?: string;
 }
 
-const { value } = Astro.props;
+const { value, class: className } = Astro.props;
 
 const components = {
   type: {
@@ -30,7 +32,7 @@ const components = {
 
 {
   value && (
-    <article class="prose prose-zinc prose-p:text-[16px] max-w-none">
+    <article class={cn("prose prose-zinc max-w-none", className)}>
       <PortableText value={value} components={components} />
     </article>
   )

@@ -1,34 +1,39 @@
 ---
-import SanityImage from "@/components/common/SanityImage.tsx";
-
+import SanityImage from "@/components/common/SanityImage";
 import type { PageBuilderBlockOf } from "@/lib/sanity-derived-types";
 
 type Props = PageBuilderBlockOf<"textWithIllustration">;
 
-const { heading, tagline, excerpt, image } = Astro.props;
+const { heading, text, image, imagePosition = "right" } = Astro.props;
+const isImageLeft = imagePosition === "left";
 ---
 
-<section class="py-16 px-4">
-  <div class="max-w-6xl mx-auto">
-    <div class="grid md:grid-cols-2 gap-12 items-center">
-      <div class="order-2 md:order-1">
-        {heading && <h2 class="text-3xl font-bold mb-4">{heading}</h2>}
-        {tagline && <p class="text-lg text-zinc-600 mb-4">{tagline}</p>}
-        {excerpt && <p class="text-zinc-700">{excerpt}</p>}
+<section class="py-12 bg-background">
+  <div class="container mx-auto px-4 max-w-7xl">
+    <div class={`flex flex-col ${isImageLeft ? "lg:flex-row-reverse" : "lg:flex-row"} gap-12 lg:gap-16 items-center`}>
+      {/* Texto */}
+      <div class="flex-1 min-w-0">
+        {heading && <h2 class="text-3xl md:text-4xl font-bold font-serif text-foreground mb-6">{heading}</h2>}
+        {text && <p class="text-muted-foreground font-sans leading-relaxed text-base">{text}</p>}
       </div>
 
-      <div class="order-1 md:order-2">
-        {
-          image?.asset && (
-            <SanityImage
-              client:load
-              image={image}
-              className="rounded-xl shadow-lg w-full h-auto"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          )
-        }
-      </div>
+      {/* Imagem */}
+      {
+        image?.asset && (
+          <div class="w-full lg:w-[45%] shrink-0">
+            <div class="rounded-2xl overflow-hidden shadow-lg aspect-4/3">
+              <SanityImage
+                client:visible
+                image={image}
+                width={800}
+                height={600}
+                sizes="(max-width: 1024px) 100vw, 45vw"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        )
+      }
     </div>
   </div>
 </section>

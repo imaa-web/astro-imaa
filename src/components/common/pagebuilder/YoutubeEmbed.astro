@@ -3,24 +3,32 @@ import type { PageBuilderBlockOf } from "@/lib/sanity-derived-types";
 
 type Props = PageBuilderBlockOf<"youtubeEmbed">;
 
-const { caption, url } = Astro.props;
-const videoId = url?.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([\w-]+)/)?.[1];
+const { url, caption } = Astro.props;
+
+function extractYouTubeId(url: string): string | null {
+  const match = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([^&\n?#]+)/);
+  return match?.[1] ?? null;
+}
+
+const videoId = url ? extractYouTubeId(url) : null;
 ---
 
 {
-  url && videoId && (
-    <figure class="my-8 flex flex-col items-center px-4">
-      <div class="w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-md">
-        <iframe
-          src={`https://www.youtube-nocookie.com/embed/${videoId}`}
-          title={caption || "YouTube video"}
-          class="w-full h-full"
-          loading="lazy"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        />
+  videoId && (
+    <section class="py-12 bg-background">
+      <div class="container mx-auto px-4 max-w-4xl">
+        <div class="rounded-2xl overflow-hidden shadow-lg aspect-video">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+            title={caption ?? "Vídeo do YouTube"}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            class="w-full h-full"
+            loading="lazy"
+          />
+        </div>
+        {caption && <p class="text-sm text-muted-foreground font-sans text-center mt-3">{caption}</p>}
       </div>
-      {caption && <figcaption class="text-sm text-center text-zinc-500 mt-3 italic">{caption}</figcaption>}
-    </figure>
+    </section>
   )
 }
