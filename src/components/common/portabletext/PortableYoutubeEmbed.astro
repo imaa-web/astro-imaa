@@ -1,4 +1,6 @@
 ---
+import { extractYouTubeId } from "@/lib/utils/video-utils";
+
 interface Props {
   node: {
     url?: string;
@@ -7,12 +9,6 @@ interface Props {
 }
 
 const { node } = Astro.props;
-
-// suporta /watch?v=, youtu.be/ e /shorts/
-function extractYouTubeId(url: string): string | null {
-  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/))([\w-]{11})/);
-  return match ? match[1] : null;
-}
 
 const videoId = node.url ? extractYouTubeId(node.url) : null;
 ---
@@ -24,9 +20,8 @@ const videoId = node.url ? extractYouTubeId(node.url) : null;
         src={`https://www.youtube-nocookie.com/embed/${videoId}`}
         title={node.caption || "YouTube video"}
         loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
         referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen
         class="w-full rounded-xl shadow-md aspect-video bg-zinc-900"
       />
       {node.caption && <figcaption class="text-sm text-zinc-500 mt-3 text-center italic">{node.caption}</figcaption>}

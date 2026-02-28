@@ -15,31 +15,29 @@ interface Props {
 
 const { node } = Astro.props;
 const videoUrl = node.file?.url;
-
-const posterUrl = node.posterImage ? urlFor(node.posterImage).auto("format").width(1200).quality(80).url() : undefined;
+const posterUrl = node.posterImage
+  ? urlFor(node.posterImage).width(1280).height(720).fit("crop").crop("focalpoint").auto("format").quality(80).url()
+  : undefined;
 ---
 
 {
   videoUrl && (
-    <figure class="my-8 flex flex-col items-center">
-      <video
-        poster={posterUrl}
-        controls
-        preload="metadata"
-        playsinline
-        aria-label={node.caption ? undefined : "Vídeo"}
-        aria-labelledby={node.caption ? "video-caption" : undefined}
-        class="w-full rounded-xl shadow-md bg-zinc-900"
-      >
-        <source src={videoUrl} type={node.file?.mimeType} />
-        Seu navegador não suporta a tag de vídeo.
-      </video>
+    <figure class="my-8 not-prose">
+      <div class="aspect-video rounded-xl overflow-hidden shadow-md bg-zinc-900">
+        <video
+          poster={posterUrl}
+          controls
+          preload="metadata"
+          playsinline
+          class="w-full h-full object-contain"
+          aria-label={node.caption || "Vídeo"}
+        >
+          <source src={videoUrl} type={node.file?.mimeType} />
+          Seu navegador não suporta a tag de vídeo.
+        </video>
+      </div>
 
-      {node.caption && (
-        <figcaption id="video-caption" class="text-sm text-center text-zinc-500 mt-3 italic">
-          {node.caption}
-        </figcaption>
-      )}
+      {node.caption && <figcaption class="text-sm text-center text-zinc-500 mt-2 italic">{node.caption}</figcaption>}
     </figure>
   )
 }
