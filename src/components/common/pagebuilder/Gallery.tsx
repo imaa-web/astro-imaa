@@ -3,6 +3,12 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import type { PageBuilderBlockOf } from "@/lib/sanity-derived-types";
 import { useMemo, useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
+import Captions from "yet-another-react-lightbox/plugins/captions";
+import "yet-another-react-lightbox/plugins/captions.css";
+import Counter from "yet-another-react-lightbox/plugins/counter";
+import "yet-another-react-lightbox/plugins/counter.css";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
 import "yet-another-react-lightbox/styles.css";
 
 type Props = PageBuilderBlockOf<"gallery">;
@@ -16,6 +22,7 @@ function buildSlides(images: GalleryImage[]) {
       alt: img.alt ?? "",
       width: img.asset?.metadata?.dimensions?.width ?? 1200,
       height: img.asset?.metadata?.dimensions?.height ?? 800,
+      description: img.caption ?? undefined,
     }));
 }
 
@@ -55,14 +62,14 @@ function GalleryItem({
   );
 }
 
+const MASONRY_COLS = 3;
+
 export default function Gallery({ heading, images, layout = "grid3" }: Readonly<Props>) {
   const [lightboxIndex, setLightboxIndex] = useState(-1);
   const validImages = useMemo(() => (images ?? []).filter((img) => img.asset?._id), [images]);
 
-  // Distribute images into columns for masonry
   const masonryColumns = useMemo(() => {
     if (layout !== "masonry") return [];
-    const MASONRY_COLS = 3;
     const cols: { image: GalleryImage; globalIndex: number }[][] = Array.from({ length: MASONRY_COLS }, () => []);
     validImages.forEach((img, i) => cols[i % MASONRY_COLS].push({ image: img, globalIndex: i }));
     return cols;
@@ -73,7 +80,7 @@ export default function Gallery({ heading, images, layout = "grid3" }: Readonly<
   if (!validImages.length) return null;
 
   return (
-    <section className="py-12 bg-background">
+    <section className="py-pagebuilder bg-background">
       <div className="container mx-auto px-4 max-w-7xl">
         {heading && <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-10 text-center">{heading}</h2>}
 
@@ -99,11 +106,11 @@ export default function Gallery({ heading, images, layout = "grid3" }: Readonly<
           </div>
         )}
 
-        {/* Masonry */}
+        {/* Masonry — 1 col mobile, 2 sm, 3 lg+ */}
         {layout === "masonry" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-start">
             {masonryColumns.map((col, colIndex) => (
-              <div key={"masonry-col-" + colIndex} className="flex flex-col gap-4">
+              <div key={"masonry-col-" + colIndex} className="grid gap-4 md:gap-6">
                 {col.map(({ image, globalIndex }) => {
                   const ratio = image.asset?.metadata?.dimensions?.aspectRatio ?? 1;
                   return (
@@ -134,13 +141,22 @@ export default function Gallery({ heading, images, layout = "grid3" }: Readonly<
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <div className="flex items-center justify-center gap-4 mt-6">
+              <CarouselPrevious className="static translate-y-0" />
+              <CarouselNext className="static translate-y-0" />
+            </div>
           </Carousel>
         )}
       </div>
 
-      <Lightbox open={lightboxIndex >= 0} close={() => setLightboxIndex(-1)} index={lightboxIndex} slides={slides} />
+      <Lightbox
+        open={lightboxIndex >= 0}
+        close={() => setLightboxIndex(-1)}
+        index={lightboxIndex}
+        slides={slides}
+        plugins={[Counter, Captions, Thumbnails]}
+        captions={{ showToggle: true }}
+      />
     </section>
   );
 }

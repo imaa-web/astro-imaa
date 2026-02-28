@@ -1,11 +1,10 @@
 ---
 import Gallery from "@/components/common/pagebuilder/Gallery";
+import RichText from "@/components/common/pagebuilder/RichText.astro";
 import TextWithIllustration from "@/components/common/pagebuilder/TextWithIllustration.astro";
 import VideoFile from "@/components/common/pagebuilder/VideoFile.astro";
 import YoutubeEmbed from "@/components/common/pagebuilder/YoutubeEmbed.astro";
 import type { ALL_PAGES_QUERY_RESULT } from "@/lib/sanity.types";
-
-//TODO: Add other page builder blocks, like rich text with variant styles
 
 interface Props {
   pageBuilder?: NonNullable<ALL_PAGES_QUERY_RESULT>[number]["pageBuilder"];
@@ -17,16 +16,18 @@ const { pageBuilder } = Astro.props;
 {
   pageBuilder?.map((block) => {
     switch (block._type) {
+      case "richText":
+        return <RichText {...block} />;
       case "textWithIllustration":
         return <TextWithIllustration {...block} />;
       case "gallery":
-        return <Gallery {...block} />;
+        return <Gallery {...block} client:visible />;
       case "videoFile":
         return <VideoFile {...block} />;
       case "youtubeEmbed":
         return <YoutubeEmbed {...block} />;
       case "horizontalRule":
-        return <hr class="my-12 mx-auto" />;
+        return <hr class="mx-auto border-border" />;
       default:
         if (import.meta.env.DEV) {
           console.warn(`Unknown pageBuilder block type: ${(block as { _type: string })._type}`);

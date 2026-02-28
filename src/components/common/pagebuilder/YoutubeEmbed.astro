@@ -1,34 +1,28 @@
 ---
+import Container from "@/components/layout/Container.astro";
 import type { PageBuilderBlockOf } from "@/lib/sanity-derived-types";
+import { extractYouTubeId } from "@/lib/utils/video-utils";
 
 type Props = PageBuilderBlockOf<"youtubeEmbed">;
 
 const { url, caption } = Astro.props;
-
-function extractYouTubeId(url: string): string | null {
-  const match = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([^&\n?#]+)/);
-  return match?.[1] ?? null;
-}
 
 const videoId = url ? extractYouTubeId(url) : null;
 ---
 
 {
   videoId && (
-    <section class="py-12 bg-background">
-      <div class="container mx-auto px-4 max-w-4xl">
-        <div class="rounded-2xl overflow-hidden shadow-lg aspect-video">
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${videoId}`}
-            title={caption ?? "Vídeo do YouTube"}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            class="w-full h-full"
-            loading="lazy"
-          />
-        </div>
-        {caption && <p class="text-sm text-muted-foreground font-sans text-center mt-3">{caption}</p>}
+    <Container size="md" class="py-pagebuilder">
+      <div class="rounded-2xl overflow-hidden shadow-lg aspect-video">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+          title={caption ?? "Vídeo do YouTube"}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          class="w-full h-full"
+          loading="lazy"
+        />
       </div>
-    </section>
+      {caption && <p class="text-sm text-muted-foreground font-sans text-center mt-3">{caption}</p>}
+    </Container>
   )
 }
