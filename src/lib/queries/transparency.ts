@@ -34,7 +34,6 @@ export const ALL_TRANSPARENCY_SECTIONS_QUERY = defineQuery(`
     ${HERO_FRAGMENT},
     partner,
     excerpt,
-    "autoExcerpt": array::join(string::split(pt::text(description), "")[0...200], ""),
     description[] { ${PORTABLE_TEXT_FRAGMENT} },
     projects[] { ${TRANSPARENCY_PROJECT_FRAGMENT} },
     documents[] { ${DOWNLOADABLE_FILE_FRAGMENT} },
