@@ -9,6 +9,7 @@
 @plugin "@tailwindcss/typography";
 
 @theme inline {
+  --spacing-pagebuilder: 3rem;
   --font-inter: "Inter Variable", sans-serif;
   --font-merriweather: "Merriweather Variable", serif;
   --font-heading: "Work Sans Variable", sans-serif;
