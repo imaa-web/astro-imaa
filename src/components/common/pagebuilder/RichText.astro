@@ -1,0 +1,25 @@
+---
+import PortableTextRenderer from "@/components/common/PortableTextRenderer.astro";
+import Container from "@/components/layout/Container.astro";
+import type { PageBuilderBlockOf } from "@/lib/sanity-derived-types";
+
+type Props = PageBuilderBlockOf<"richText">;
+
+const { content, background = "default" } = Astro.props;
+const isMuted = background === "muted";
+---
+
+{
+  content &&
+    (isMuted ? (
+      <section class="my-pagebuilder bg-muted">
+        <Container size="md" class="py-pagebuilder">
+          <PortableTextRenderer value={content} />
+        </Container>
+      </section>
+    ) : (
+      <Container size="md" class="py-pagebuilder">
+        <PortableTextRenderer value={content} />
+      </Container>
+    ))
+}
