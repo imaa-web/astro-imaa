@@ -1,5 +1,5 @@
 ---
-import { Download, FileText } from "lucide-react";
+import { Download, FileText } from "@lucide/astro";
 
 interface QueryDocItem {
   _key: string;
@@ -20,7 +20,7 @@ const displayName = doc.title || doc.label || doc.fileName || "Documento";
 
 <div class={wrapperClass}>
   <div class="flex items-center gap-2 min-w-0">
-    <FileText className="w-4 h-4 text-primary shrink-0" />
+    <FileText class="w-4 h-4 text-primary shrink-0" />
     <div class="min-w-0">
       <p class="text-sm font-medium text-foreground font-sans text-pretty">
         {displayName}
@@ -37,7 +37,7 @@ const displayName = doc.title || doc.label || doc.fileName || "Documento";
         aria-label={`Baixar ${displayName.toLowerCase()} (abre em nova aba)`}
         class="inline-flex items-center gap-1.5 border border-primary text-primary hover:bg-primary hover:text-white text-xs font-medium font-sans px-3 py-1.5 rounded-md transition-colors shrink-0"
       >
-        <Download className="w-3.5 h-3.5" />
+        <Download class="w-3.5 h-3.5" />
         Baixar
       </a>
     )

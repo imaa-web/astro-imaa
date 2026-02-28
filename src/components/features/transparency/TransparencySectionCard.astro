@@ -1,7 +1,6 @@
 ---
 import type { ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT } from "@/lib/sanity.types";
-import { truncateExcerpt } from "@/lib/utils/string-utils";
-import { ArrowRight, FileText } from "lucide-react";
+import { ArrowRight, FileText } from "@lucide/astro";
 
 type Section = NonNullable<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT>[number];
 
@@ -10,7 +9,6 @@ interface Props {
 }
 
 const { section } = Astro.props;
-const description = truncateExcerpt(section.excerpt ?? section.autoExcerpt);
 ---
 
 {
@@ -21,7 +19,7 @@ const description = truncateExcerpt(section.excerpt ?? section.autoExcerpt);
     >
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 rounded-xl bg-primary flex items-center justify-center shrink-0 group-hover:bg-accent transition-colors">
-          <FileText className="w-6 h-6 text-white" />
+          <FileText class="w-6 h-6 text-white" />
         </div>
         <div>
           {section.partner && (
@@ -30,9 +28,11 @@ const description = truncateExcerpt(section.excerpt ?? section.autoExcerpt);
           <h2 class="font-bold text-foreground leading-tight">{section.partner ?? section.title ?? "Seção"}</h2>
         </div>
       </div>
-      {description && <p class="text-sm text-muted-foreground font-sans leading-relaxed line-clamp-2">{description}</p>}
+      {section.excerpt && (
+        <p class="text-sm text-muted-foreground font-sans leading-relaxed line-clamp-2">{section.excerpt}</p>
+      )}
       <span class="inline-flex items-center gap-1 text-sm font-semibold text-primary font-sans mt-auto group-hover:underline">
-        Ver documentos <ArrowRight className="w-4 h-4" />
+        Ver documentos <ArrowRight class="w-4 h-4" />
       </span>
     </a>
   )

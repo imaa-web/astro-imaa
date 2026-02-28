@@ -1,5 +1,5 @@
 ---
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@lucide/astro";
 
 interface Props {
   href: string;
@@ -10,6 +10,6 @@ const { href, label } = Astro.props;
 ---
 
 <a href={href} class="inline-flex items-center gap-1.5 text-sm text-primary hover:underline font-sans">
-  <ArrowLeft className="w-4 h-4" />
+  <ArrowLeft class="w-4 h-4" />
   {label}
 </a>

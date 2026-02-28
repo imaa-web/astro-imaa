@@ -1,7 +1,7 @@
 ---
 import WhatsAppIcon from "@/components/icons/WhatsAppIcon";
 import type { QueryContactInfo } from "@/lib/sanity-derived-types";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "@lucide/astro";
 
 interface Props {
   contactInfo: QueryContactInfo;
@@ -16,7 +16,7 @@ const { contactInfo } = Astro.props;
     {
       contactInfo.address && (
         <li class="flex items-start gap-2">
-          <MapPin className="w-5 h-5 text-secondary mt-0.5 shrink-0" />
+          <MapPin class="w-5 h-5 text-secondary mt-0.5 shrink-0" />
           <div class="text-sm text-primary-foreground/80 font-sans">
             {contactInfo.address.street && (
               <p>
@@ -41,7 +41,7 @@ const { contactInfo } = Astro.props;
         ?.filter((item) => item.address)
         .map((item) => (
           <li class="flex items-center gap-2">
-            <Mail className="w-5 h-5 text-secondary shrink-0" />
+            <Mail class="w-5 h-5 text-secondary shrink-0" />
             <a
               href={`mailto:${item.address}`}
               class="text-sm text-primary-foreground/80 hover:text-secondary transition-colors font-sans break-all"
@@ -60,7 +60,7 @@ const { contactInfo } = Astro.props;
             {item.isWhatsApp ? (
               <WhatsAppIcon className="w-5 h-5 text-secondary shrink-0" />
             ) : (
-              <Phone className="w-5 h-5 text-secondary shrink-0" />
+              <Phone class="w-5 h-5 text-secondary shrink-0" />
             )}
             <a
               href={item.isWhatsApp ? `https://wa.me/${item.number?.replace(/\D/g, "")}` : `tel:${item.number}`}

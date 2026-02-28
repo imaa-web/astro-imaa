@@ -12,7 +12,7 @@ interface Props {
 const { heading, tagline, class: className } = Astro.props;
 ---
 
-<PageSection py="md" class={cn("bg-background text-foreground", className)}>
+<PageSection class={cn("bg-background text-foreground pt-12 pb-0", className)}>
   <Container size="md">
     <h1 class="text-3xl md:text-5xl font-black mb-3 text-pretty tracking-wider">{heading}</h1>
     {tagline && <p class="text-foreground/80 font-sans text-sm max-w-2xl text-pretty mb-3">{tagline}</p>}
