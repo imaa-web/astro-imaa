@@ -1,4 +1,5 @@
 ---
+import CtaSection from "@/components/common/pagebuilder/CtaSection.astro";
 import Gallery from "@/components/common/pagebuilder/Gallery";
 import RichText from "@/components/common/pagebuilder/RichText.astro";
 import TextWithIllustration from "@/components/common/pagebuilder/TextWithIllustration.astro";
@@ -20,6 +21,8 @@ const { pageBuilder } = Astro.props;
         return <RichText {...block} />;
       case "textWithIllustration":
         return <TextWithIllustration {...block} />;
+      case "ctaSection":
+        return <CtaSection {...block} />;
       case "gallery":
         return <Gallery {...block} client:visible />;
       case "videoFile":

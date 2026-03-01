@@ -125,7 +125,7 @@ export type SiteSettings = {
   _updatedAt: string;
   _rev: string;
   title?: string;
-  description?: string;
+  defaultSeoDescription?: string;
   logo?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -184,6 +184,15 @@ export type SanityImageHotspot = {
   y?: number;
   height?: number;
   width?: number;
+};
+
+export type CtaSection = {
+  _type: "ctaSection";
+  heading?: string;
+  subheading?: string;
+  primaryCta?: Cta;
+  secondaryCta?: Cta;
+  background?: "primary" | "muted";
 };
 
 export type PageReference = {
@@ -360,6 +369,9 @@ export type Page = {
       } & TextWithIllustration)
     | ({
         _key: string;
+      } & CtaSection)
+    | ({
+        _key: string;
       } & Gallery)
     | ({
         _key: string;
@@ -491,6 +503,7 @@ export type AllSanitySchemaTypes =
   | Menu
   | SanityImageCrop
   | SanityImageHotspot
+  | CtaSection
   | PageReference
   | Cta
   | SocialLink
@@ -615,7 +628,7 @@ export type HOME_PAGE_QUERY_RESULT =
 
 // Source: ../astro-imaa/src/lib/queries/page.ts
 // Variable: ALL_PAGES_QUERY
-// Query: *[_type == "page" && defined(slug.current)] | order(_createdAt desc) {        _id,  title,  excerpt,    "slug": slug.current,    hero {    heading,    tagline,  },  "featuredImage": featuredImage {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  }, showInPage },  "pageBuilder": pageBuilder[] {   _key,  _type,  _type == "textWithIllustration" => {    ...,    "image": image {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } },    "cta": cta {   label,  linkType,  "slug": pageReference->slug.current,  externalUrl,  openInNewTab }  },  _type == "gallery" => {    ...,    "images": images[] {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } }  },  _type == "videoFile" => {   ...,  "file": {    "url": file.asset->url,    "mimeType": file.asset->mimeType  },  "posterImage": posterImage {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } } },  _type == "youtubeEmbed" => {   ...,  url,  caption },  _type == "horizontalRule" => {    ...  },  _type == "richText" => {    ...,    content[] {   ...,  _type == "image" => {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } },  _type == "videoFile" => {   ...,  "file": {    "url": file.asset->url,    "mimeType": file.asset->mimeType  },  "posterImage": posterImage {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } } },  _type == "youtubeEmbed" => {   ...,  url,  caption },  _type == "downloadableFile" => {   ...,  "url": asset->url }, },    background,  }, }  }
+// Query: *[_type == "page" && defined(slug.current)] | order(_createdAt desc) {        _id,  title,  excerpt,    "slug": slug.current,    hero {    heading,    tagline,  },  "featuredImage": featuredImage {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  }, showInPage },  "pageBuilder": pageBuilder[] {   _key,  _type,  _type == "ctaSection" => {    ...,    "primaryCta": primaryCta {   label,  linkType,  "slug": pageReference->slug.current,  externalUrl,  openInNewTab },    "secondaryCta": secondaryCta {   label,  linkType,  "slug": pageReference->slug.current,  externalUrl,  openInNewTab }  },  _type == "textWithIllustration" => {    ...,    "image": image {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } },    "cta": cta {   label,  linkType,  "slug": pageReference->slug.current,  externalUrl,  openInNewTab }  },  _type == "gallery" => {    ...,    "images": images[] {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } }  },  _type == "videoFile" => {   ...,  "file": {    "url": file.asset->url,    "mimeType": file.asset->mimeType  },  "posterImage": posterImage {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } } },  _type == "youtubeEmbed" => {   ...,  url,  caption },  _type == "horizontalRule" => {    ...  },  _type == "richText" => {    ...,    content[] {   ...,  _type == "image" => {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } },  _type == "videoFile" => {   ...,  "file": {    "url": file.asset->url,    "mimeType": file.asset->mimeType  },  "posterImage": posterImage {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } } },  _type == "youtubeEmbed" => {   ...,  url,  caption },  _type == "downloadableFile" => {   ...,  "url": asset->url }, },    background,  }, }  }
 export type ALL_PAGES_QUERY_RESULT = Array<{
   _id: string;
   title: string | null;
@@ -646,6 +659,27 @@ export type ALL_PAGES_QUERY_RESULT = Array<{
     showInPage: boolean | null;
   } | null;
   pageBuilder: Array<
+    | {
+        _key: string;
+        _type: "ctaSection";
+        heading?: string;
+        subheading?: string;
+        primaryCta: {
+          label: string | null;
+          linkType: "external" | "internal" | null;
+          slug: string | null;
+          externalUrl: string | null;
+          openInNewTab: boolean | null;
+        } | null;
+        secondaryCta: {
+          label: string | null;
+          linkType: "external" | "internal" | null;
+          slug: string | null;
+          externalUrl: string | null;
+          openInNewTab: boolean | null;
+        } | null;
+        background?: "muted" | "primary";
+      }
     | {
         _key: string;
         _type: "gallery";
@@ -853,11 +887,11 @@ export type ALL_PAGES_QUERY_RESULT = Array<{
 
 // Source: ../astro-imaa/src/lib/queries/site-settings.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_id == "siteSettings"][0] {    title,    description,    "logo": logo {        hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  },    },    "mainMenu": {      "label": coalesce(mainMenu.label, "Menu Principal"),      "items": coalesce(mainMenu.items[] {   _key,  "label": coalesce(label, pageReference->title),  "slug": pageReference->slug.current,  "isDropdown": count(submenu) > 0,  submenu[] {    _key,    "label": coalesce(label, pageReference->title),    "slug": pageReference->slug.current  } }, [])    },    "footerMenu": {      "label": coalesce(footerMenu.label, "Navegação"),      "items": coalesce(footerMenu.items[] {   _key,  "label": coalesce(label, pageReference->title),  "slug": pageReference->slug.current,  "isDropdown": count(submenu) > 0,  submenu[] {    _key,    "label": coalesce(label, pageReference->title),    "slug": pageReference->slug.current  } }, [])    },    "socialLinks": coalesce(socialLinks[] {      platform,      url,      label    }, []),    "contactInfo": coalesce(contactInfo {      address,      phones,      emails    }, { "address": null, "phones": [], "emails": [] })  }
+// Query: *[_id == "siteSettings"][0] {    title,    defaultSeoDescription,    "logo": logo {        hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  },    },    "mainMenu": {      "label": coalesce(mainMenu.label, "Menu Principal"),      "items": coalesce(mainMenu.items[] {   _key,  "label": coalesce(label, pageReference->title),  "slug": pageReference->slug.current,  "isDropdown": count(submenu) > 0,  submenu[] {    _key,    "label": coalesce(label, pageReference->title),    "slug": pageReference->slug.current  } }, [])    },    "footerMenu": {      "label": coalesce(footerMenu.label, "Navegação"),      "items": coalesce(footerMenu.items[] {   _key,  "label": coalesce(label, pageReference->title),  "slug": pageReference->slug.current,  "isDropdown": count(submenu) > 0,  submenu[] {    _key,    "label": coalesce(label, pageReference->title),    "slug": pageReference->slug.current  } }, [])    },    "socialLinks": coalesce(socialLinks[] {      platform,      url,      label    }, []),    "contactInfo": coalesce(contactInfo {      address,      phones,      emails    }, { "address": null, "phones": [], "emails": [] })  }
 export type SITE_SETTINGS_QUERY_RESULT =
   | {
       title: string | null;
-      description: string | null;
+      defaultSeoDescription: string | null;
       logo: {
         hotspot: SanityImageHotspot | null;
         crop: SanityImageCrop | null;
@@ -945,7 +979,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
     }
   | {
       title: null;
-      description: null;
+      defaultSeoDescription: null;
       logo: null;
       mainMenu: {
         label: "Menu Principal";
@@ -964,7 +998,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
     }
   | {
       title: string | null;
-      description: null;
+      defaultSeoDescription: null;
       logo: null;
       mainMenu: {
         label: "Menu Principal";
@@ -983,7 +1017,7 @@ export type SITE_SETTINGS_QUERY_RESULT =
     }
   | {
       title: string | null;
-      description: null;
+      defaultSeoDescription: null;
       logo: {
         hotspot: SanityImageHotspot | null;
         crop: SanityImageCrop | null;
@@ -1018,49 +1052,11 @@ export type SITE_SETTINGS_QUERY_RESULT =
         emails: Array<never>;
       };
     }
-  | {
-      title: string | null;
-      description: BlockContent | null;
-      logo: null;
-      mainMenu: {
-        label: "Menu Principal";
-        items: Array<never>;
-      };
-      footerMenu: {
-        label: "Navega\xE7\xE3o";
-        items: Array<never>;
-      };
-      socialLinks: Array<never>;
-      contactInfo: {
-        address: null;
-        phones: Array<never>;
-        emails: Array<never>;
-      };
-    }
-  | {
-      title: string | null;
-      description: string | null;
-      logo: null;
-      mainMenu: {
-        label: "Menu Principal";
-        items: Array<never>;
-      };
-      footerMenu: {
-        label: "Navega\xE7\xE3o";
-        items: Array<never>;
-      };
-      socialLinks: Array<never>;
-      contactInfo: {
-        address: null;
-        phones: Array<never>;
-        emails: Array<never>;
-      };
-    }
   | null;
 
 // Source: ../astro-imaa/src/lib/queries/transparency.ts
 // Variable: TRANSPARENCY_INDEX_PAGE_QUERY
-// Query: *[_type == "page" && slug.current == "transparencia"][0] {        _id,  title,  excerpt,    "slug": slug.current,    hero {    heading,    tagline,  },  "featuredImage": featuredImage {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  }, showInPage },  "pageBuilder": pageBuilder[] {   _key,  _type,  _type == "textWithIllustration" => {    ...,    "image": image {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } },    "cta": cta {   label,  linkType,  "slug": pageReference->slug.current,  externalUrl,  openInNewTab }  },  _type == "gallery" => {    ...,    "images": images[] {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } }  },  _type == "videoFile" => {   ...,  "file": {    "url": file.asset->url,    "mimeType": file.asset->mimeType  },  "posterImage": posterImage {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } } },  _type == "youtubeEmbed" => {   ...,  url,  caption },  _type == "horizontalRule" => {    ...  },  _type == "richText" => {    ...,    content[] {   ...,  _type == "image" => {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } },  _type == "videoFile" => {   ...,  "file": {    "url": file.asset->url,    "mimeType": file.asset->mimeType  },  "posterImage": posterImage {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } } },  _type == "youtubeEmbed" => {   ...,  url,  caption },  _type == "downloadableFile" => {   ...,  "url": asset->url }, },    background,  }, }  }
+// Query: *[_type == "page" && slug.current == "transparencia"][0] {        _id,  title,  excerpt,    "slug": slug.current,    hero {    heading,    tagline,  },  "featuredImage": featuredImage {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  }, showInPage },  "pageBuilder": pageBuilder[] {   _key,  _type,  _type == "ctaSection" => {    ...,    "primaryCta": primaryCta {   label,  linkType,  "slug": pageReference->slug.current,  externalUrl,  openInNewTab },    "secondaryCta": secondaryCta {   label,  linkType,  "slug": pageReference->slug.current,  externalUrl,  openInNewTab }  },  _type == "textWithIllustration" => {    ...,    "image": image {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } },    "cta": cta {   label,  linkType,  "slug": pageReference->slug.current,  externalUrl,  openInNewTab }  },  _type == "gallery" => {    ...,    "images": images[] {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } }  },  _type == "videoFile" => {   ...,  "file": {    "url": file.asset->url,    "mimeType": file.asset->mimeType  },  "posterImage": posterImage {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } } },  _type == "youtubeEmbed" => {   ...,  url,  caption },  _type == "horizontalRule" => {    ...  },  _type == "richText" => {    ...,    content[] {   ...,  _type == "image" => {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } },  _type == "videoFile" => {   ...,  "file": {    "url": file.asset->url,    "mimeType": file.asset->mimeType  },  "posterImage": posterImage {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } } },  _type == "youtubeEmbed" => {   ...,  url,  caption },  _type == "downloadableFile" => {   ...,  "url": asset->url }, },    background,  }, }  }
 export type TRANSPARENCY_INDEX_PAGE_QUERY_RESULT = {
   _id: string;
   title: string | null;
@@ -1091,6 +1087,27 @@ export type TRANSPARENCY_INDEX_PAGE_QUERY_RESULT = {
     showInPage: boolean | null;
   } | null;
   pageBuilder: Array<
+    | {
+        _key: string;
+        _type: "ctaSection";
+        heading?: string;
+        subheading?: string;
+        primaryCta: {
+          label: string | null;
+          linkType: "external" | "internal" | null;
+          slug: string | null;
+          externalUrl: string | null;
+          openInNewTab: boolean | null;
+        } | null;
+        secondaryCta: {
+          label: string | null;
+          linkType: "external" | "internal" | null;
+          slug: string | null;
+          externalUrl: string | null;
+          openInNewTab: boolean | null;
+        } | null;
+        background?: "muted" | "primary";
+      }
     | {
         _key: string;
         _type: "gallery";
@@ -1429,9 +1446,9 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '\n  *[_id == "homePage"][0] {\n    title,\n    excerpt,\n    heroDescription,\n    "logo": logo {\n      \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n\n    },\n    "primaryCta": primaryCta { \n  label,\n  linkType,\n  "slug": pageReference->slug.current,\n  externalUrl,\n  openInNewTab\n },\n    "secondaryCta": secondaryCta { \n  label,\n  linkType,\n  "slug": pageReference->slug.current,\n  externalUrl,\n  openInNewTab\n },\n  }\n': HOME_PAGE_QUERY_RESULT;
-    '\n  *[_type == "page" && defined(slug.current)] | order(_createdAt desc) {\n    \n  \n  _id,\n  title,\n  excerpt,\n  \n  "slug": slug.current\n\n,\n  \n  hero {\n    heading,\n    tagline,\n  }\n,\n  "featuredImage": featuredImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n, showInPage },\n  "pageBuilder": pageBuilder[] { \n  _key,\n  _type,\n  _type == "textWithIllustration" => {\n    ...,\n    "image": image { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n    "cta": cta { \n  label,\n  linkType,\n  "slug": pageReference->slug.current,\n  externalUrl,\n  openInNewTab\n }\n  },\n  _type == "gallery" => {\n    ...,\n    "images": images[] { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n  },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "horizontalRule" => {\n    ...\n  },\n  _type == "richText" => {\n    ...,\n    content[] { \n  ...,\n  _type == "image" => { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "downloadableFile" => { \n  ...,\n  "url": asset->url\n },\n },\n    background,\n  },\n }\n\n  }\n': ALL_PAGES_QUERY_RESULT;
-    '\n  *[_id == "siteSettings"][0] {\n    title,\n    description,\n    "logo": logo {\n      \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n,\n    },\n    "mainMenu": {\n      "label": coalesce(mainMenu.label, "Menu Principal"),\n      "items": coalesce(mainMenu.items[] { \n  _key,\n  "label": coalesce(label, pageReference->title),\n  "slug": pageReference->slug.current,\n  "isDropdown": count(submenu) > 0,\n  submenu[] {\n    _key,\n    "label": coalesce(label, pageReference->title),\n    "slug": pageReference->slug.current\n  }\n }, [])\n    },\n    "footerMenu": {\n      "label": coalesce(footerMenu.label, "Navega\xE7\xE3o"),\n      "items": coalesce(footerMenu.items[] { \n  _key,\n  "label": coalesce(label, pageReference->title),\n  "slug": pageReference->slug.current,\n  "isDropdown": count(submenu) > 0,\n  submenu[] {\n    _key,\n    "label": coalesce(label, pageReference->title),\n    "slug": pageReference->slug.current\n  }\n }, [])\n    },\n    "socialLinks": coalesce(socialLinks[] {\n      platform,\n      url,\n      label\n    }, []),\n    "contactInfo": coalesce(contactInfo {\n      address,\n      phones,\n      emails\n    }, { "address": null, "phones": [], "emails": [] })\n  }\n': SITE_SETTINGS_QUERY_RESULT;
-    '\n  *[_type == "page" && slug.current == "transparencia"][0] {\n    \n  \n  _id,\n  title,\n  excerpt,\n  \n  "slug": slug.current\n\n,\n  \n  hero {\n    heading,\n    tagline,\n  }\n,\n  "featuredImage": featuredImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n, showInPage },\n  "pageBuilder": pageBuilder[] { \n  _key,\n  _type,\n  _type == "textWithIllustration" => {\n    ...,\n    "image": image { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n    "cta": cta { \n  label,\n  linkType,\n  "slug": pageReference->slug.current,\n  externalUrl,\n  openInNewTab\n }\n  },\n  _type == "gallery" => {\n    ...,\n    "images": images[] { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n  },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "horizontalRule" => {\n    ...\n  },\n  _type == "richText" => {\n    ...,\n    content[] { \n  ...,\n  _type == "image" => { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "downloadableFile" => { \n  ...,\n  "url": asset->url\n },\n },\n    background,\n  },\n }\n\n  }\n': TRANSPARENCY_INDEX_PAGE_QUERY_RESULT;
+    '\n  *[_type == "page" && defined(slug.current)] | order(_createdAt desc) {\n    \n  \n  _id,\n  title,\n  excerpt,\n  \n  "slug": slug.current\n\n,\n  \n  hero {\n    heading,\n    tagline,\n  }\n,\n  "featuredImage": featuredImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n, showInPage },\n  "pageBuilder": pageBuilder[] { \n  _key,\n  _type,\n  _type == "ctaSection" => {\n    ...,\n    "primaryCta": primaryCta { \n  label,\n  linkType,\n  "slug": pageReference->slug.current,\n  externalUrl,\n  openInNewTab\n },\n    "secondaryCta": secondaryCta { \n  label,\n  linkType,\n  "slug": pageReference->slug.current,\n  externalUrl,\n  openInNewTab\n }\n  },\n  _type == "textWithIllustration" => {\n    ...,\n    "image": image { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n    "cta": cta { \n  label,\n  linkType,\n  "slug": pageReference->slug.current,\n  externalUrl,\n  openInNewTab\n }\n  },\n  _type == "gallery" => {\n    ...,\n    "images": images[] { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n  },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "horizontalRule" => {\n    ...\n  },\n  _type == "richText" => {\n    ...,\n    content[] { \n  ...,\n  _type == "image" => { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "downloadableFile" => { \n  ...,\n  "url": asset->url\n },\n },\n    background,\n  },\n }\n\n  }\n': ALL_PAGES_QUERY_RESULT;
+    '\n  *[_id == "siteSettings"][0] {\n    title,\n    defaultSeoDescription,\n    "logo": logo {\n      \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n,\n    },\n    "mainMenu": {\n      "label": coalesce(mainMenu.label, "Menu Principal"),\n      "items": coalesce(mainMenu.items[] { \n  _key,\n  "label": coalesce(label, pageReference->title),\n  "slug": pageReference->slug.current,\n  "isDropdown": count(submenu) > 0,\n  submenu[] {\n    _key,\n    "label": coalesce(label, pageReference->title),\n    "slug": pageReference->slug.current\n  }\n }, [])\n    },\n    "footerMenu": {\n      "label": coalesce(footerMenu.label, "Navega\xE7\xE3o"),\n      "items": coalesce(footerMenu.items[] { \n  _key,\n  "label": coalesce(label, pageReference->title),\n  "slug": pageReference->slug.current,\n  "isDropdown": count(submenu) > 0,\n  submenu[] {\n    _key,\n    "label": coalesce(label, pageReference->title),\n    "slug": pageReference->slug.current\n  }\n }, [])\n    },\n    "socialLinks": coalesce(socialLinks[] {\n      platform,\n      url,\n      label\n    }, []),\n    "contactInfo": coalesce(contactInfo {\n      address,\n      phones,\n      emails\n    }, { "address": null, "phones": [], "emails": [] })\n  }\n': SITE_SETTINGS_QUERY_RESULT;
+    '\n  *[_type == "page" && slug.current == "transparencia"][0] {\n    \n  \n  _id,\n  title,\n  excerpt,\n  \n  "slug": slug.current\n\n,\n  \n  hero {\n    heading,\n    tagline,\n  }\n,\n  "featuredImage": featuredImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n, showInPage },\n  "pageBuilder": pageBuilder[] { \n  _key,\n  _type,\n  _type == "ctaSection" => {\n    ...,\n    "primaryCta": primaryCta { \n  label,\n  linkType,\n  "slug": pageReference->slug.current,\n  externalUrl,\n  openInNewTab\n },\n    "secondaryCta": secondaryCta { \n  label,\n  linkType,\n  "slug": pageReference->slug.current,\n  externalUrl,\n  openInNewTab\n }\n  },\n  _type == "textWithIllustration" => {\n    ...,\n    "image": image { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n    "cta": cta { \n  label,\n  linkType,\n  "slug": pageReference->slug.current,\n  externalUrl,\n  openInNewTab\n }\n  },\n  _type == "gallery" => {\n    ...,\n    "images": images[] { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n  },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "horizontalRule" => {\n    ...\n  },\n  _type == "richText" => {\n    ...,\n    content[] { \n  ...,\n  _type == "image" => { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "downloadableFile" => { \n  ...,\n  "url": asset->url\n },\n },\n    background,\n  },\n }\n\n  }\n': TRANSPARENCY_INDEX_PAGE_QUERY_RESULT;
     '\n  *[_type == "transparencySection"] | order(order asc) {\n    _id,\n    title,\n    \n  "slug": slug.current\n,\n    \n  hero {\n    heading,\n    tagline,\n  }\n,\n    partner,\n    excerpt,\n    description[] { \n  ...,\n  _type == "image" => { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "downloadableFile" => { \n  ...,\n  "url": asset->url\n },\n },\n    projects[] { \n  _key,\n  title,\n  origin,\n  value,\n  status,\n  documents[] { \n  _key,\n  title,\n  label,\n  "fileUrl": asset->url,\n  "fileName": asset->originalFilename,\n },\n },\n    documents[] { \n  _key,\n  title,\n  label,\n  "fileUrl": asset->url,\n  "fileName": asset->originalFilename,\n },\n  }\n': ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT;
   }
 }

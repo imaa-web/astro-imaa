@@ -87,6 +87,11 @@ export const BASE_PAGE_FRAGMENT = `
 export const PAGE_BUILDER_FRAGMENT = `
   _key,
   _type,
+  _type == "ctaSection" => {
+    ...,
+    "primaryCta": primaryCta { ${CTA_FRAGMENT} },
+    "secondaryCta": secondaryCta { ${CTA_FRAGMENT} }
+  },
   _type == "textWithIllustration" => {
     ...,
     "image": image { ${IMAGE_FRAGMENT} },
