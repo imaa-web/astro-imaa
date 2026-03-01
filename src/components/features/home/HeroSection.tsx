@@ -1,0 +1,181 @@
+import streamers from "@/assets/streamers-color.png";
+import SanityImage from "@/components/common/SanityImage";
+import { Button } from "@/components/ui/button";
+import { CARNIVAL_BLOCK_NAME, DEFAULT_DESCRIPTION, INSTITUTE_NAME } from "@/lib/constants";
+import type { SanityImageBase } from "@/lib/sanity-derived-types";
+import type { HOME_PAGE_QUERY_RESULT } from "@/lib/sanity.types";
+import { resolveCta } from "@/lib/utils/link-utils";
+import { ArrowRight, ExternalLink } from "lucide-react";
+import { motion } from "motion/react";
+
+type HeroCta = NonNullable<HOME_PAGE_QUERY_RESULT>["primaryCta"];
+
+interface HeroSectionProps {
+  description?: string | null;
+  logo?: SanityImageBase | null;
+  primaryCta?: HeroCta;
+  secondaryCta?: HeroCta;
+}
+
+interface CtaButtonProps {
+  cta?: HeroCta;
+  variant?: "default" | "outline";
+  className?: string;
+}
+
+function CtaButton({ cta, variant = "default", className }: Readonly<CtaButtonProps>) {
+  if (!cta?.label) return null;
+  const resolved = resolveCta(cta);
+  if (!resolved) return null;
+  return (
+    <Button asChild size="lg" variant={variant} className={className}>
+      <motion.a
+        href={resolved.href}
+        target={resolved.openInNewTab ? "_blank" : undefined}
+        rel={resolved.openInNewTab ? "noopener noreferrer" : undefined}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        {cta.label}
+        {resolved.openInNewTab && <span className="sr-only">(abre em nova aba)</span>}
+        {resolved.isExternal ? (
+          <ExternalLink className="w-4 h-4" aria-hidden="true" />
+        ) : (
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
+        )}
+      </motion.a>
+    </Button>
+  );
+}
+
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.2 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: "easeOut" as const },
+  },
+};
+
+function BlurRevealText({
+  text,
+  className,
+  delay = 0,
+}: Readonly<{ text: string; className?: string; delay?: number }>) {
+  return (
+    <motion.span
+      className={className}
+      initial={{ opacity: 0, filter: "blur(8px)" }}
+      animate={{ opacity: 1, filter: "blur(0px)" }}
+      transition={{ duration: 0.7, ease: "easeOut", delay }}
+    >
+      {text}
+    </motion.span>
+  );
+}
+
+export default function HeroSection({ description, logo, primaryCta, secondaryCta }: Readonly<HeroSectionProps>) {
+  return (
+    <section className="relative min-h-[calc(100vh-5rem)] flex items-center overflow-hidden bg-[radial-gradient(circle,rgba(27,122,59,1)_0%,rgba(0,86,28,1)_40%,rgba(5,33,14,1)_100%)]">
+      <img
+        src={streamers.src}
+        alt=""
+        aria-hidden="true"
+        className="absolute top-0 left-0 z-0 w-full h-auto pointer-events-none blur-[1px] brightness-125"
+      />
+
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-6 md:px-10 lg:px-16 max-w-6xl py-16 mb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16 items-center">
+          {/* Text */}
+          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="order-2 lg:order-1">
+            {/* Heading */}
+            <motion.h1 variants={itemVariants} className="mb-6 leading-tight">
+              <span className="block uppercase text-lg md:text-3xl font-sans font-semibold mb-3 text-pretty">
+                <BlurRevealText
+                  text={INSTITUTE_NAME}
+                  className="bg-secondary bg-clip-text text-transparent"
+                  delay={0.1}
+                />
+              </span>
+              <span className="block font-serif text-5xl md:text-6xl">
+                <BlurRevealText
+                  text={CARNIVAL_BLOCK_NAME}
+                  delay={0.2}
+                  className="bg-primary-foreground bg-clip-text text-transparent"
+                />
+              </span>
+            </motion.h1>
+
+            {/* Gradient divider */}
+            <motion.div variants={itemVariants} className="h-px w-32 mb-6 gradient-colors" />
+
+            <motion.p
+              variants={itemVariants}
+              className="text-base md:text-lg text-white/70 mb-10 leading-relaxed font-sans max-w-md"
+            >
+              {description ?? DEFAULT_DESCRIPTION}
+            </motion.p>
+
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
+              <CtaButton cta={primaryCta} className="bg-accent hover:bg-accent/90 text-white" />
+              <CtaButton
+                cta={secondaryCta}
+                variant="outline"
+                className="border-white/20 text-white/80 hover:bg-white/5 hover:border-white/40 bg-transparent"
+              />
+            </motion.div>
+          </motion.div>
+
+          {/* Logo */}
+          <motion.div
+            className="order-1 lg:order-2 flex items-center justify-center"
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
+          >
+            <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 xl:w-md xl:h-112">
+              {/* Glow rings */}
+              <div className="absolute inset-8 rounded-full blur-2xl opacity-50 bg-secondary" />
+              <div className="absolute inset-16 rounded-full blur-3xl opacity-40 bg-accent" />
+
+              {logo && (
+                <motion.div
+                  className="absolute inset-0"
+                  animate={{ rotate: [0, -1.5, 1.5, -1, 1, 0] }}
+                  transition={{
+                    duration: 3,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <SanityImage
+                    image={logo}
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-contain"
+                    alt={logo.alt ?? CARNIVAL_BLOCK_NAME}
+                  />
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2">
+        <span className="text-xs text-white/30 uppercase tracking-widest font-sans">Role para ver mais</span>
+        <motion.div
+          className="w-px h-10 bg-linear-to-b from-white/30 to-transparent"
+          animate={{ opacity: [0.3, 0.8, 0.3] }}
+          transition={{ duration: 2.5, repeat: Infinity }}
+        />
+      </div>
+    </section>
+  );
+}

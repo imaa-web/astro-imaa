@@ -1,24 +1,40 @@
 ---
-import HeroSection from "@/components/features/home/HeroSection.astro";
+import HeroSection from "@/components/features/home/HeroSection";
 import Layout from "@/layouts/Layout.astro";
-import { DEFAULT_DESCRIPTION } from "@/lib/constants";
+import { loadQuery } from "@/lib/load-query";
+import { HOME_PAGE_QUERY } from "@/lib/queries/home";
+import { getEntry } from "astro:content";
+import type { HOME_PAGE_QUERY_RESULT } from "@/lib/sanity.types";
+import UnderConstruction from "@/components/sections/UnderConstruction.astro";
+
+const siteSettings = await getEntry("siteSettings", "site-settings");
+
+const { data: homePage } = await loadQuery<HOME_PAGE_QUERY_RESULT>({
+  query: HOME_PAGE_QUERY,
+});
+
+const logo = homePage?.logo ?? siteSettings?.data.logo ?? null;
 ---
 
-<Layout title="Início" description={DEFAULT_DESCRIPTION}>
-  <HeroSection />
-
-  <script>
-    import confetti from "canvas-confetti";
-
-    const canvas = document.getElementById("confetti-canvas") as HTMLCanvasElement;
-    const myConfetti = confetti.create(canvas, { resize: true, useWorker: true });
-
-    myConfetti({
-      particleCount: 150,
-      spread: 160,
-      origin: { y: 0 },
-      gravity: 0.5,
-      ticks: 300,
-    });
-  </script>
+<Layout title={homePage?.title ?? "Início"} description={homePage?.excerpt ?? siteSettings?.data.description ?? ""}>
+  <HeroSection
+    client:load
+    description={homePage?.heroDescription ?? null}
+    logo={logo}
+    primaryCta={homePage?.primaryCta ?? null}
+    secondaryCta={homePage?.secondaryCta ?? null}
+  />
+  <UnderConstruction />
 </Layout>
+
+<script>
+  import confetti from "canvas-confetti";
+
+  confetti({
+    particleCount: 150,
+    spread: 160,
+    origin: { y: 0 },
+    gravity: 0.5,
+    ticks: 300,
+  });
+</script>
