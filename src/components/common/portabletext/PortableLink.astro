@@ -1,4 +1,6 @@
 ---
+import { resolveSafeHref } from "@/lib/utils/link-utils";
+
 interface MarkDef {
   href?: string;
   blank?: boolean;
@@ -13,14 +15,11 @@ interface Props {
 const { node } = Astro.props;
 
 const markDef = node?.markDef;
-const href = (markDef?.href || "").trim();
+const safeHref = resolveSafeHref(markDef?.href ?? "");
 
-const SAFE_SCHEMES = ["https://", "mailto:", "tel:", "#", "./", "../"];
-const isSafeHref =
-  href !== "" && (SAFE_SCHEMES.some((s) => href.startsWith(s)) || (href.startsWith("/") && !href.startsWith("//")));
-const safeHref = href === "" ? null : isSafeHref ? href : "";
-
-const isExternal = href.startsWith("https://");
+// http:// is intentionally excluded from SAFE_SCHEMES in resolveSafeHref,
+// so only https:// can reach this point as an external link.
+const isExternal = (markDef?.href ?? "").startsWith("https://");
 const shouldOpenInNewTab = markDef?.blank !== undefined ? markDef.blank : isExternal;
 ---
 
@@ -32,7 +31,7 @@ const shouldOpenInNewTab = markDef?.blank !== undefined ? markDef.blank : isExte
       href={safeHref}
       target={shouldOpenInNewTab ? "_blank" : undefined}
       rel={shouldOpenInNewTab || isExternal ? "noopener noreferrer" : undefined}
-      class="font-medium text-blue-600 underline decoration-blue-300 underline-offset-4 hover:decoration-blue-600 transition-all"
+      class="font-medium text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-all"
     >
       <slot />
     </a>
