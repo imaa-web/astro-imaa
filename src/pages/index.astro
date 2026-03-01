@@ -16,7 +16,10 @@ const { data: homePage } = await loadQuery<HOME_PAGE_QUERY_RESULT>({
 const logo = homePage?.logo ?? siteSettings?.data.logo ?? null;
 ---
 
-<Layout title={homePage?.title ?? "Início"} description={homePage?.excerpt ?? siteSettings?.data.description ?? ""}>
+<Layout
+  title={homePage?.title ?? "Início"}
+  description={homePage?.excerpt ?? siteSettings?.data.defaultSeoDescription ?? ""}
+>
   <HeroSection
     client:load
     description={homePage?.heroDescription ?? null}

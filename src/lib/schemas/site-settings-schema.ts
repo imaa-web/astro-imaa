@@ -101,7 +101,7 @@ const contactInfoSchema = z.object({
 
 export const siteSettingsSchema = z.object({
   title: z.string().nullable(),
-  description: z.string().nullable(),
+  defaultSeoDescription: z.string().nullable(),
   logo: imageSchema.nullable(),
   mainMenu: menuSchema.nullable(),
   footerMenu: menuSchema.nullable(),
