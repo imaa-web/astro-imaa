@@ -1,4 +1,4 @@
-import streamers from "@/assets/streamers-color.png";
+import streamers from "@/assets/streamers-colorful.png";
 import SanityImage from "@/components/common/SanityImage";
 import { Button } from "@/components/ui/button";
 import { CARNIVAL_BLOCK_NAME, DEFAULT_DESCRIPTION, INSTITUTE_NAME } from "@/lib/constants";
@@ -86,7 +86,7 @@ export default function HeroSection({ description, logo, primaryCta, secondaryCt
         src={streamers.src}
         alt=""
         aria-hidden="true"
-        className="absolute top-0 left-0 z-0 w-full h-auto pointer-events-none blur-[1px] brightness-125"
+        className="absolute top-0 left-0 z-0 w-full h-auto pointer-events-none blur-[1px] brightness-100"
       />
 
       {/* Content */}
