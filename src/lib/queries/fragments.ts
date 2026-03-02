@@ -29,15 +29,25 @@ export const SLUG_FRAGMENT = `
   "slug": slug.current
 `;
 
+const PAGE_REFERENCE_SLUG = `select(
+  pageReference->_type == "homePage" => "inicio",
+  pageReference->_type == "contactPage" => "contato",
+  pageReference->slug.current
+)`;
+
 export const MENU_ITEM_FRAGMENT = `
   _key,
   "label": coalesce(label, pageReference->title),
-  "slug": pageReference->slug.current,
+  "slug": select(
+    pageReference->_type == "homePage" => "inicio",
+    pageReference->_type == "contactPage" => "contato",
+    pageReference->slug.current
+  ),
   "isDropdown": count(submenu) > 0,
   submenu[] {
     _key,
     "label": coalesce(label, pageReference->title),
-    "slug": pageReference->slug.current
+    "slug": ${PAGE_REFERENCE_SLUG},
   }
 `;
 
@@ -64,7 +74,7 @@ const DOWNLOADABLE_FILE_FRAGMENT = `
 export const CTA_FRAGMENT = `
   label,
   linkType,
-  "slug": pageReference->slug.current,
+  "slug": ${PAGE_REFERENCE_SLUG},
   externalUrl,
   openInNewTab
 `;
