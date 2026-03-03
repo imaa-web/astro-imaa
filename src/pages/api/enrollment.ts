@@ -20,7 +20,7 @@ const dynamicFormSchema = z
     message: "Número máximo de campos excedido",
   });
 
-// Schema das labels COM OS LIMITES (Fix final do CodeRabbit)
+// Schema das labels COM OS LIMITES
 const fieldLabelsSchema = z
   .record(z.string().max(MAX_KEY_LENGTH), z.string().max(MAX_VALUE_LENGTH))
   .refine((data) => Object.keys(data).length <= MAX_FIELDS, {
