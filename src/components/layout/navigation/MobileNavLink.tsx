@@ -1,14 +1,14 @@
 import { mobileUnderlineClass } from "@/lib/utils/navbar-utils";
 import { cn } from "@/lib/utils/ui-utils";
 
-interface Props {
+interface MobileNavLinkProps {
   href: string;
   label: string;
   active: boolean;
   className?: string;
 }
 
-export default function MobileNavLink({ href, label, active, className }: Readonly<Props>) {
+export default function MobileNavLink({ href, label, active, className }: Readonly<MobileNavLinkProps>) {
   return (
     <a
       href={href}

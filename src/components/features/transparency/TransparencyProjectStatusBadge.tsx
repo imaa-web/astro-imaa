@@ -6,7 +6,7 @@ import { AlertCircle, CheckCircle, Clock, type LucideIcon } from "lucide-react";
  * @param status - Status value. Unknown or nullish values default to "pending".
  * @param className - Additional CSS classes to apply to the badge.
  */
-interface Props {
+interface TransparencyProjectStatusBadgeProps {
   status: TransparencyProjectStatus;
   className?: string;
 }
@@ -33,7 +33,10 @@ const statusConfig: Record<
   pending: { label: "Pendente", classes: "bg-red-100 text-red-700 border-red-300 hover:bg-red-100", Icon: AlertCircle },
 };
 
-export default function StatusBadge({ status, className }: Readonly<Props>) {
+export default function TransparencyProjectStatusBadge({
+  status,
+  className,
+}: Readonly<TransparencyProjectStatusBadgeProps>) {
   const config = statusConfig[status ?? "pending"];
   const { label, classes, Icon } = config;
 

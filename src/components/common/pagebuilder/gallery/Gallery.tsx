@@ -14,7 +14,7 @@ import { GalleryGrid3 } from "./GalleryGrid3";
 import { isValidImage, type ValidGalleryImage } from "./GalleryItem";
 import { GalleryMasonry } from "./GalleryMasonry";
 
-type Props = PageBuilderBlockOf<"gallery">;
+type GalleryProps = PageBuilderBlockOf<"gallery">;
 
 function buildSlides(images: ValidGalleryImage[]) {
   return images.map((img) => ({
@@ -26,7 +26,13 @@ function buildSlides(images: ValidGalleryImage[]) {
   }));
 }
 
-export default function Gallery({ heading, images, layout = "grid3", autoplay, autoplayInterval }: Readonly<Props>) {
+export default function Gallery({
+  heading,
+  images,
+  layout = "grid3",
+  autoplay,
+  autoplayInterval,
+}: Readonly<GalleryProps>) {
   const [lightboxIndex, setLightboxIndex] = useState(-1);
 
   const validImages = useMemo(() => (images ?? []).filter(isValidImage), [images]);

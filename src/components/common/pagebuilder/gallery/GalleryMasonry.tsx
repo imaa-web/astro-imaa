@@ -5,12 +5,12 @@ import { GalleryItem } from "./GalleryItem";
 
 const MASONRY_COLS = 4;
 
-interface Props {
+interface GalleryMasonryProps {
   images: ValidGalleryImage[];
   onOpen: (index: number) => void;
 }
 
-export function GalleryMasonry({ images, onOpen }: Readonly<Props>) {
+export function GalleryMasonry({ images, onOpen }: Readonly<GalleryMasonryProps>) {
   const columns = useMemo(() => {
     const cols: { image: ValidGalleryImage; globalIndex: number }[][] = Array.from({ length: MASONRY_COLS }, () => []);
     images.forEach((img, i) => cols[i % MASONRY_COLS].push({ image: img, globalIndex: i }));

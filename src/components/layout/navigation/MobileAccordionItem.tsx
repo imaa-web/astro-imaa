@@ -3,12 +3,12 @@ import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/
 import type { QueryMenuItem } from "@/lib/sanity-derived-types";
 import { buildUrlFromSlug } from "@/lib/utils/string-utils";
 
-interface Props {
+interface MobileAccordionItemProps {
   item: QueryMenuItem;
   currentPath: string;
 }
 
-export default function MobileAccordionItem({ item, currentPath }: Readonly<Props>) {
+export default function MobileAccordionItem({ item, currentPath }: Readonly<MobileAccordionItemProps>) {
   return (
     <AccordionItem value={item._key} className="border-none">
       <AccordionTrigger className="relative px-4 py-3 text-sm text-primary font-bold tracking-wide font-sans hover:no-underline [&>svg]:text-primary">

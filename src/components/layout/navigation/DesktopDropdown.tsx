@@ -12,12 +12,12 @@ import { ChevronDown } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 
-interface Props {
+interface DesktopDropdownProps {
   item: QueryMenuItem;
   currentPath: string;
 }
 
-export default function DesktopDropdown({ item, currentPath }: Readonly<Props>) {
+export default function DesktopDropdown({ item, currentPath }: Readonly<DesktopDropdownProps>) {
   const [open, setOpen] = useState(false);
   const active = item.slug ? isActiveLink(currentPath, buildUrlFromSlug(item.slug)) : false;
   const anyChildActive =
@@ -26,12 +26,7 @@ export default function DesktopDropdown({ item, currentPath }: Readonly<Props>) 
 
   return (
     <DropdownMenu onOpenChange={setOpen}>
-      <DropdownMenuTrigger
-        className={cn(
-          linkClass,
-          "group outline-none",
-        )}
-      >
+      <DropdownMenuTrigger className={cn(linkClass, "group outline-none")}>
         <span
           className={cn(
             linkContentUnderlineClass,

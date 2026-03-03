@@ -1,19 +1,15 @@
 import { linkClass, linkContentUnderlineClass } from "@/lib/utils/navbar-utils";
 import { cn } from "@/lib/utils/ui-utils";
 
-interface Props {
+interface NavLinkProps {
   href: string;
   label: string;
   active: boolean;
 }
 
-export default function NavLink({ href, label, active }: Readonly<Props>) {
+export default function NavLink({ href, label, active }: Readonly<NavLinkProps>) {
   return (
-    <a
-      href={href}
-      className={cn(linkClass, "group")}
-      aria-current={active ? "page" : undefined}
-    >
+    <a href={href} className={cn(linkClass, "group")} aria-current={active ? "page" : undefined}>
       <span
         className={cn(
           linkContentUnderlineClass,

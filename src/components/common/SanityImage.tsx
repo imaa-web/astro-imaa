@@ -5,7 +5,7 @@ import type { SanityImageBase } from "@/lib/sanity-derived-types";
 const SANITY_PROJECT_ID = import.meta.env.PUBLIC_SANITY_PROJECT_ID;
 const SANITY_DATASET = import.meta.env.PUBLIC_SANITY_DATASET;
 
-interface Props {
+interface SanityImageProps {
   image: SanityImageBase;
   alt?: string;
   width?: number;
@@ -25,7 +25,7 @@ export default function SanityImage({
   sizes,
   loading = "lazy",
   style,
-}: Readonly<Props>) {
+}: Readonly<SanityImageProps>) {
   if (!SANITY_PROJECT_ID || !SANITY_DATASET || !image?.asset?._id) {
     if (import.meta.env.DEV && (!SANITY_PROJECT_ID || !SANITY_DATASET)) {
       console.warn("SanityImage: Variáveis de ambiente não configuradas.");
