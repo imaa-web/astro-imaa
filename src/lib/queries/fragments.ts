@@ -109,7 +109,9 @@ export const PAGE_BUILDER_FRAGMENT = `
   },
   _type == "gallery" => {
     ...,
-    "images": images[] { ${IMAGE_FRAGMENT} }
+    "images": images[] { ${IMAGE_FRAGMENT} },
+    autoplay,
+    autoplayInterval
   },
   _type == "videoFile" => { ${VIDEO_FILE_FRAGMENT} },
   _type == "youtubeEmbed" => { ${YOUTUBE_EMBED_FRAGMENT} },
