@@ -1,0 +1,131 @@
+---
+import BananeiraIcon from "@/components/icons/BananeiraIcon";
+import Container from "@/components/layout/Container.astro";
+import Layout from "@/layouts/Layout.astro";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils/ui-utils";
+import { House, ArrowLeft } from "@lucide/astro";
+---
+
+<Layout title="Página não encontrada" description="A página que você está procurando não existe ou foi movida.">
+  <div class="relative flex items-center overflow-hidden min-h-[calc(100dvh-5rem)] py-12 bg-muted">
+    <Container size="md">
+      <div class="relative z-10 flex flex-col items-center text-center gap-10">
+        <!-- 404 glyph -->
+        <div class="flex items-center gap-1 leading-none select-none" aria-hidden="true">
+          <span class="glyph-4 font-heading font-black text-primary tracking-[-0.04em] animate-fade-up">4</span>
+          <span class="glyph-icon block shrink-0 animate-sway origin-bottom">
+            <BananeiraIcon className="w-full h-full" />
+          </span>
+          <span
+            class="glyph-4 font-heading font-black text-primary tracking-[-0.04em] animate-fade-up [animation-delay:150ms]"
+            >4</span
+          >
+        </div>
+
+        <!-- content -->
+        <div class="animate-fade-up [animation-delay:200ms]">
+          <p class="heading-label-on-light mb-3">Erro 404</p>
+          <h1 class="heading-1 mb-4 text-balance">Essa página foi embora tocar no bloco</h1>
+          <div
+            class="h-1.5 w-20 rounded-sm bg-accent mx-auto mb-6 origin-center animate-scale-in [animation-delay:550ms]"
+          >
+          </div>
+          <p class="body-text text-pretty mb-10 mx-auto max-w-md text-center">
+            Parece que a rua por onde você veio não leva a lugar nenhum. Mas o desfile continua — volte para a festa!
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="/" class={cn(buttonVariants({ size: "lg" }))}>
+              <House class="w-4 h-4" aria-hidden="true" />
+              Voltar para o início
+            </a>
+            <button
+              type="button"
+              onclick="history.back()"
+              class={cn(buttonVariants({ variant: "outline", size: "lg" }))}
+            >
+              <ArrowLeft class="w-4 h-4" aria-hidden="true" />
+              Página anterior
+            </button>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </div>
+</Layout>
+
+<style>
+  /* clamp e keyframes não têm equivalente direto em Tailwind */
+  .glyph-4 {
+    font-size: clamp(4rem, 12vw, 8rem);
+  }
+
+  .glyph-icon {
+    width: clamp(3rem, 8vw, 6rem);
+    height: clamp(3rem, 8vw, 6rem);
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes sway {
+    0% {
+      transform: rotate(0deg);
+    }
+    20% {
+      transform: rotate(-3deg);
+    }
+    50% {
+      transform: rotate(3.5deg);
+    }
+    75% {
+      transform: rotate(-2deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.5s ease-out both;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.35s ease-out both;
+    transform: scaleX(0);
+  }
+
+  .animate-sway {
+    animation:
+      fade-up 0.5s ease-out 80ms both,
+      sway 2s ease-in-out 0.6s infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-up,
+    .animate-scale-in,
+    .animate-sway {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
