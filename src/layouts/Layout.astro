@@ -20,6 +20,7 @@ const { title, description, canonical, image } = Astro.props;
 <html lang="pt-BR">
   <head>
     <Head title={title} description={description} canonical={canonical} image={image} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <ClientRouter />
   </head>
   <body>
