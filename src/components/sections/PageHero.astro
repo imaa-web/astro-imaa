@@ -19,8 +19,14 @@ const { heading, tagline, containerSize = "md", class: className } = Astro.props
     <div>
       <div>
         <h1 class="heading-1 mb-3">
-          {heading}<span class="bananeira-icon inline-block mb-2 align-bottom ml-2" aria-hidden="true">
-            <BananeiraIcon className="h-6 md:h-8 w-auto" />
+          {heading.split(" ").slice(0, -1).join(" ")}{" "}
+          <span class="whitespace-nowrap">
+            {heading.split(" ").at(-1)}<span
+              class="bananeira-icon inline-block mb-2 align-bottom ml-2"
+              aria-hidden="true"
+            >
+              <BananeiraIcon className="h-6 md:h-8 w-auto" />
+            </span>
           </span>
         </h1>
       </div>
