@@ -87,17 +87,16 @@ export default function HeroSection({
 }: Readonly<HeroSectionProps>) {
   return (
     <section className="relative overflow-hidden bg-[linear-gradient(to_bottom,rgba(27,122,59,1)_0%,rgba(0,86,28,1)_18%,rgba(5,33,14,1)_60%,rgba(5,33,14,1)_78%)]">
-      {/* Streamers decorativos */}
       <img
         src={streamers.src}
         alt=""
         aria-hidden="true"
-        className="absolute top-0 left-0 z-0 w-full h-auto pointer-events-none blur-[1px]"
+        className="absolute top-0 left-0 z-0 w-full h-auto pointer-events-none blur-[1px] brightness-125"
       />
 
       {/* ── Hero ── */}
-      <div className="relative z-10 container mx-auto px-6 md:px-10 lg:px-16 max-w-7xl pt-16 lg:min-h-[calc(100vh-5rem)] flex items-center">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16 items-center w-full">
+      <div className="relative z-10 container mx-auto px-6 md:px-10 lg:px-16 lg:max-w-6xl pt-16 lg:min-h-[calc(100vh-5rem)] flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center w-full">
           {/* Texto */}
           <motion.div variants={containerVariants} initial="hidden" animate="visible" className="order-2 lg:order-1">
             <motion.h1 variants={itemVariants} className="mb-6 leading-tight">
