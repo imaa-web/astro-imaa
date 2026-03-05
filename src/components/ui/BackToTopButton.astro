@@ -1,0 +1,138 @@
+---
+import { cn } from "@/lib/utils/ui-utils";
+import { ChevronUp } from "@lucide/astro";
+---
+
+<div class="fixed right-4 bottom-4 z-50">
+  <button
+    id="back-to-top-btn"
+    aria-label="Voltar ao topo"
+    class={cn(
+      "rounded-full bg-accent p-2 h-10 w-10 flex justify-center items-center",
+      "transition-all duration-300 ease-in-out cursor-pointer",
+      "opacity-0 pointer-events-none translate-y-4",
+      "hover:bg-accent/95",
+    )}
+  >
+    <ChevronUp class="text-accent-foreground size-6" />
+  </button>
+</div>
+
+<script>
+  // Interface tipada para os handlers do BackToTop
+  interface BackToTopHandlers {
+    handleScroll: () => void;
+    handleClick: () => void;
+    handleMouseEnter: () => void;
+    handleMouseLeave: () => void;
+    timeout: number | undefined;
+  }
+
+  // WeakMap para armazenar os handlers de forma tipada e sem memory leaks
+  const handlerMap = new WeakMap<HTMLElement, BackToTopHandlers>();
+
+  // The logic runs in the browser
+  function initBackToTop() {
+    const btn = document.getElementById("back-to-top-btn") as HTMLElement | null;
+    if (!btn) return;
+
+    // Check if there are existing handlers stored on the button
+    const existing = handlerMap.get(btn);
+    if (existing) {
+      // Remove old event listeners
+      window.removeEventListener("scroll", existing.handleScroll);
+      btn.removeEventListener("click", existing.handleClick);
+      btn.removeEventListener("mouseenter", existing.handleMouseEnter);
+      btn.removeEventListener("mouseleave", existing.handleMouseLeave);
+      // Clear any pending timeout from the old instance
+      if (existing.timeout) clearTimeout(existing.timeout);
+    }
+
+    let timeout: number | undefined;
+    let isHovered = false;
+
+    // Functions to control visibility
+    const show = () => {
+      btn.classList.remove("opacity-0", "pointer-events-none", "translate-y-4");
+      btn.classList.add("opacity-100", "translate-y-0");
+    };
+
+    const hide = () => {
+      // Only hides if the mouse is not hovering
+      if (!isHovered) {
+        btn.classList.remove("opacity-100", "translate-y-0");
+        btn.classList.add("opacity-0", "pointer-events-none", "translate-y-4");
+      }
+    };
+
+    // Helper function to update timeout in handlers
+    const updateTimeout = (newTimeout: number | undefined) => {
+      timeout = newTimeout;
+      const handlers = handlerMap.get(btn);
+      if (handlers) {
+        handlers.timeout = timeout;
+      }
+    };
+
+    const resetTimer = () => {
+      if (timeout) clearTimeout(timeout);
+      // Hides after 2 seconds of inactivity
+      updateTimeout(window.setTimeout(hide, 2000));
+    };
+
+    // Named handler functions to store references
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        show();
+        // If scrolling, resets the timer to hide
+        if (!isHovered) resetTimer();
+      } else {
+        // Hides immediately if back to top
+        if (timeout) clearTimeout(timeout);
+        isHovered = false; // Forces reset of hover
+        hide();
+      }
+    };
+
+    const handleClick = () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    const handleMouseEnter = () => {
+      isHovered = true;
+      if (timeout) {
+        clearTimeout(timeout);
+        updateTimeout(undefined);
+      }
+      show(); // Ensures visibility
+    };
+
+    const handleMouseLeave = () => {
+      isHovered = false;
+      resetTimer(); // Resets the count to hide
+    };
+
+    // Add event listeners
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    btn.addEventListener("click", handleClick);
+    btn.addEventListener("mouseenter", handleMouseEnter);
+    btn.addEventListener("mouseleave", handleMouseLeave);
+
+    // Store handler references for cleanup on next init
+    const handlers: BackToTopHandlers = {
+      handleScroll,
+      handleClick,
+      handleMouseEnter,
+      handleMouseLeave,
+      timeout,
+    };
+
+    handlerMap.set(btn, handlers);
+  }
+
+  // Executes on initial load
+  initBackToTop();
+
+  // Executes on every navigation (View Transitions / Client Router)
+  document.addEventListener("astro:page-load", initBackToTop);
+</script>
