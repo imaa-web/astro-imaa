@@ -215,11 +215,25 @@ export type PageReference = {
   [internalGroqTypeReferenceTo]?: "page";
 };
 
+export type HomePageReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "homePage";
+};
+
+export type ContactPageReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "contactPage";
+};
+
 export type Cta = {
   _type: "cta";
   label?: string;
   linkType?: "internal" | "external";
-  pageReference?: PageReference;
+  pageReference?: PageReference | HomePageReference | ContactPageReference;
   externalUrl?: string;
   openInNewTab?: boolean;
 };
@@ -278,6 +292,67 @@ export type DownloadableFile = {
   label?: string;
 };
 
+export type HomeMissionSection = {
+  _type: "homeMissionSection";
+  label?: string;
+  heading?: string;
+  headingHighlight?: string;
+  description?: string;
+  secondaryDescription?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  pillars?: Array<{
+    icon?: "music" | "heart" | "users" | "star";
+    title?: string;
+    description?: string;
+    color?:
+      | "primary"
+      | "secondary"
+      | "accent"
+      | "primaryLight"
+      | "secondaryDark";
+    _type: "pillar";
+    _key: string;
+  }>;
+};
+
+export type HomeProjectsPreview = {
+  _type: "homeProjectsPreview";
+  label?: string;
+  heading?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  projects?: Array<{
+    title?: string;
+    description?: string;
+    accent?: "secondary" | "primary" | "primaryLight" | "accent";
+    _type: "project";
+    _key: string;
+  }>;
+};
+
+export type HomeBlockHighlightSection = {
+  _type: "homeBlockHighlightSection";
+  label?: string;
+  milestone?: string;
+  milestoneLabel?: string;
+  heading?: string;
+  body?: string;
+  footer?: string;
+};
+
 export type HorizontalRule = {
   _type: "horizontalRule";
   info?: string;
@@ -324,27 +399,13 @@ export type TextWithIllustration = {
     alt?: string;
     _type: "image";
   };
-  imagePosition?: "right" | "left";
+  imagePosition?: "left" | "right";
 };
 
 export type RichText = {
   _type: "richText";
   content?: BlockContent;
   background?: "default" | "muted";
-};
-
-export type HomePageReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "homePage";
-};
-
-export type ContactPageReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "contactPage";
 };
 
 export type MenuItem = {
@@ -400,16 +461,9 @@ export type HomePage = {
   heroDescription?: string;
   primaryCta?: Cta;
   secondaryCta?: Cta;
-  socialGallery?: Array<{
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    caption?: string;
-    _type: "image";
-    _key: string;
-  }>;
+  blockHighlightSection?: HomeBlockHighlightSection;
+  missionSection?: HomeMissionSection;
+  projectsPreview?: HomeProjectsPreview;
 };
 
 export type Page = {
@@ -569,19 +623,22 @@ export type AllSanitySchemaTypes =
   | CtaSection
   | FormField
   | PageReference
+  | HomePageReference
+  | ContactPageReference
   | Cta
   | SocialLink
   | SanityFileAssetReference
   | VideoFile
   | YoutubeEmbed
   | DownloadableFile
+  | HomeMissionSection
+  | HomeProjectsPreview
+  | HomeBlockHighlightSection
   | HorizontalRule
   | FeaturedImage
   | Gallery
   | TextWithIllustration
   | RichText
-  | HomePageReference
-  | ContactPageReference
   | MenuItem
   | ContactPage
   | HomePage
@@ -629,7 +686,7 @@ export type CONTACT_PAGE_QUERY_RESULT = {
 
 // Source: ../astro-imaa/src/lib/queries/home.ts
 // Variable: HOME_PAGE_QUERY
-// Query: *[_id == "homePage"][0] {    title,    excerpt,    heroDescription,    "logo": logo {        hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  }    },    "primaryCta": primaryCta {   label,  linkType,  "slug": select(  pageReference->_type == "homePage" => "inicio",  pageReference->_type == "contactPage" => "contato",  pageReference->slug.current),  externalUrl,  openInNewTab },    "secondaryCta": secondaryCta {   label,  linkType,  "slug": select(  pageReference->_type == "homePage" => "inicio",  pageReference->_type == "contactPage" => "contato",  pageReference->slug.current),  externalUrl,  openInNewTab },  }
+// Query: *[_id == "homePage"][0] {    title,    excerpt,    heroDescription,    "logo": logo {        hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  }    },    "primaryCta": primaryCta {   label,  linkType,  "slug": select(  pageReference->_type == "homePage" => "inicio",  pageReference->_type == "contactPage" => "contato",  pageReference->slug.current),  externalUrl,  openInNewTab },    "secondaryCta": secondaryCta {   label,  linkType,  "slug": select(  pageReference->_type == "homePage" => "inicio",  pageReference->_type == "contactPage" => "contato",  pageReference->slug.current),  externalUrl,  openInNewTab },    "projectsPreview": projectsPreview {      label,      heading,      "image": image {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } },      projects[] {        _key,        title,        description,        accent      },    },    "missionSection": missionSection {      label,      heading,      headingHighlight,      description,      secondaryDescription,      "image": image {   hotspot,  crop,    alt,      caption,   asset-> {    _id,    url,     altText,    metadata {      lqip,       dimensions {        width,        height,        aspectRatio      }    }  } },      pillars[] {        _key,        icon,        title,        description,        color      },    },    "blockHighlightSection": blockHighlightSection {      label,      milestone,      milestoneLabel,      heading,      body,      footer,    },  }
 export type HOME_PAGE_QUERY_RESULT =
   | {
       title: null;
@@ -638,6 +695,9 @@ export type HOME_PAGE_QUERY_RESULT =
       logo: null;
       primaryCta: null;
       secondaryCta: null;
+      projectsPreview: null;
+      missionSection: null;
+      blockHighlightSection: null;
     }
   | {
       title: string | null;
@@ -646,6 +706,9 @@ export type HOME_PAGE_QUERY_RESULT =
       logo: null;
       primaryCta: null;
       secondaryCta: null;
+      projectsPreview: null;
+      missionSection: null;
+      blockHighlightSection: null;
     }
   | {
       title: string | null;
@@ -672,6 +735,9 @@ export type HOME_PAGE_QUERY_RESULT =
       } | null;
       primaryCta: null;
       secondaryCta: null;
+      projectsPreview: null;
+      missionSection: null;
+      blockHighlightSection: null;
     }
   | {
       title: string | null;
@@ -680,6 +746,9 @@ export type HOME_PAGE_QUERY_RESULT =
       logo: null;
       primaryCta: null;
       secondaryCta: null;
+      projectsPreview: null;
+      missionSection: null;
+      blockHighlightSection: null;
     }
   | {
       title: string | null;
@@ -707,16 +776,92 @@ export type HOME_PAGE_QUERY_RESULT =
       primaryCta: {
         label: string | null;
         linkType: "external" | "internal" | null;
-        slug: string | null;
+        slug: string | "contato" | "inicio" | null;
         externalUrl: string | null;
         openInNewTab: boolean | null;
       } | null;
       secondaryCta: {
         label: string | null;
         linkType: "external" | "internal" | null;
-        slug: string | null;
+        slug: string | "contato" | "inicio" | null;
         externalUrl: string | null;
         openInNewTab: boolean | null;
+      } | null;
+      projectsPreview: {
+        label: string | null;
+        heading: string | null;
+        image: {
+          hotspot: SanityImageHotspot | null;
+          crop: SanityImageCrop | null;
+          alt: string | null;
+          caption: null;
+          asset: {
+            _id: string;
+            url: string | null;
+            altText: string | null;
+            metadata: {
+              lqip: string | null;
+              dimensions: {
+                width: number | null;
+                height: number | null;
+                aspectRatio: number | null;
+              } | null;
+            } | null;
+          } | null;
+        } | null;
+        projects: Array<{
+          _key: string;
+          title: string | null;
+          description: string | null;
+          accent: "accent" | "primary" | "primaryLight" | "secondary" | null;
+        }> | null;
+      } | null;
+      missionSection: {
+        label: string | null;
+        heading: string | null;
+        headingHighlight: string | null;
+        description: string | null;
+        secondaryDescription: string | null;
+        image: {
+          hotspot: SanityImageHotspot | null;
+          crop: SanityImageCrop | null;
+          alt: string | null;
+          caption: null;
+          asset: {
+            _id: string;
+            url: string | null;
+            altText: string | null;
+            metadata: {
+              lqip: string | null;
+              dimensions: {
+                width: number | null;
+                height: number | null;
+                aspectRatio: number | null;
+              } | null;
+            } | null;
+          } | null;
+        } | null;
+        pillars: Array<{
+          _key: string;
+          icon: "heart" | "music" | "star" | "users" | null;
+          title: string | null;
+          description: string | null;
+          color:
+            | "accent"
+            | "primary"
+            | "primaryLight"
+            | "secondary"
+            | "secondaryDark"
+            | null;
+        }> | null;
+      } | null;
+      blockHighlightSection: {
+        label: string | null;
+        milestone: string | null;
+        milestoneLabel: string | null;
+        heading: string | null;
+        body: string | null;
+        footer: string | null;
       } | null;
     }
   | null;
@@ -762,14 +907,14 @@ export type ALL_PAGES_QUERY_RESULT = Array<{
         primaryCta: {
           label: string | null;
           linkType: "external" | "internal" | null;
-          slug: string | null;
+          slug: string | "contato" | "inicio" | null;
           externalUrl: string | null;
           openInNewTab: boolean | null;
         } | null;
         secondaryCta: {
           label: string | null;
           linkType: "external" | "internal" | null;
-          slug: string | null;
+          slug: string | "contato" | "inicio" | null;
           externalUrl: string | null;
           openInNewTab: boolean | null;
         } | null;
@@ -919,7 +1064,7 @@ export type ALL_PAGES_QUERY_RESULT = Array<{
         cta: {
           label: string | null;
           linkType: "external" | "internal" | null;
-          slug: string | null;
+          slug: string | "contato" | "inicio" | null;
           externalUrl: string | null;
           openInNewTab: boolean | null;
         } | null;
@@ -1211,14 +1356,14 @@ export type TRANSPARENCY_INDEX_PAGE_QUERY_RESULT = {
         primaryCta: {
           label: string | null;
           linkType: "external" | "internal" | null;
-          slug: string | null;
+          slug: string | "contato" | "inicio" | null;
           externalUrl: string | null;
           openInNewTab: boolean | null;
         } | null;
         secondaryCta: {
           label: string | null;
           linkType: "external" | "internal" | null;
-          slug: string | null;
+          slug: string | "contato" | "inicio" | null;
           externalUrl: string | null;
           openInNewTab: boolean | null;
         } | null;
@@ -1368,7 +1513,7 @@ export type TRANSPARENCY_INDEX_PAGE_QUERY_RESULT = {
         cta: {
           label: string | null;
           linkType: "external" | "internal" | null;
-          slug: string | null;
+          slug: string | "contato" | "inicio" | null;
           externalUrl: string | null;
           openInNewTab: boolean | null;
         } | null;
@@ -1564,7 +1709,7 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '\n  *[_type == "contactPage"][0] {\n    heading,\n    tagline,\n    seoDescription,\n    contactTabLabel,\n    contactFormHeading,\n    contactFormDescription,\n    enrollmentActive,\n    enrollmentTabLabel,\n    enrollmentFormHeading,\n    enrollmentFormDescription,\n    "enrollmentFormFields": enrollmentFormFields[] {\n      _key,\n      fieldType,\n      label,\n      placeholder,\n      inputType,\n      required,\n      width,\n      "options": options[] {\n        _key,\n        label\n      }\n    }\n  }\n': CONTACT_PAGE_QUERY_RESULT;
-    '\n  *[_id == "homePage"][0] {\n    title,\n    excerpt,\n    heroDescription,\n    "logo": logo {\n      \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n\n    },\n    "primaryCta": primaryCta { \n  label,\n  linkType,\n  "slug": select(\n  pageReference->_type == "homePage" => "inicio",\n  pageReference->_type == "contactPage" => "contato",\n  pageReference->slug.current\n),\n  externalUrl,\n  openInNewTab\n },\n    "secondaryCta": secondaryCta { \n  label,\n  linkType,\n  "slug": select(\n  pageReference->_type == "homePage" => "inicio",\n  pageReference->_type == "contactPage" => "contato",\n  pageReference->slug.current\n),\n  externalUrl,\n  openInNewTab\n },\n  }\n': HOME_PAGE_QUERY_RESULT;
+    '\n  *[_id == "homePage"][0] {\n    title,\n    excerpt,\n    heroDescription,\n    "logo": logo {\n      \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n\n    },\n    "primaryCta": primaryCta { \n  label,\n  linkType,\n  "slug": select(\n  pageReference->_type == "homePage" => "inicio",\n  pageReference->_type == "contactPage" => "contato",\n  pageReference->slug.current\n),\n  externalUrl,\n  openInNewTab\n },\n    "secondaryCta": secondaryCta { \n  label,\n  linkType,\n  "slug": select(\n  pageReference->_type == "homePage" => "inicio",\n  pageReference->_type == "contactPage" => "contato",\n  pageReference->slug.current\n),\n  externalUrl,\n  openInNewTab\n },\n    "projectsPreview": projectsPreview {\n      label,\n      heading,\n      "image": image { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n      projects[] {\n        _key,\n        title,\n        description,\n        accent\n      },\n    },\n    "missionSection": missionSection {\n      label,\n      heading,\n      headingHighlight,\n      description,\n      secondaryDescription,\n      "image": image { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n      pillars[] {\n        _key,\n        icon,\n        title,\n        description,\n        color\n      },\n    },\n    "blockHighlightSection": blockHighlightSection {\n      label,\n      milestone,\n      milestoneLabel,\n      heading,\n      body,\n      footer,\n    },\n  }\n': HOME_PAGE_QUERY_RESULT;
     '\n  *[_type == "page" && defined(slug.current)] | order(_createdAt desc) {\n    \n  \n  _id,\n  title,\n  excerpt,\n  \n  "slug": slug.current\n\n,\n  \n  hero {\n    heading,\n    tagline,\n  }\n,\n  "featuredImage": featuredImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n, showInPage },\n  "pageBuilder": pageBuilder[] { \n  _key,\n  _type,\n  _type == "ctaSection" => {\n    ...,\n    "primaryCta": primaryCta { \n  label,\n  linkType,\n  "slug": select(\n  pageReference->_type == "homePage" => "inicio",\n  pageReference->_type == "contactPage" => "contato",\n  pageReference->slug.current\n),\n  externalUrl,\n  openInNewTab\n },\n    "secondaryCta": secondaryCta { \n  label,\n  linkType,\n  "slug": select(\n  pageReference->_type == "homePage" => "inicio",\n  pageReference->_type == "contactPage" => "contato",\n  pageReference->slug.current\n),\n  externalUrl,\n  openInNewTab\n }\n  },\n  _type == "textWithIllustration" => {\n    ...,\n    "image": image { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n    "cta": cta { \n  label,\n  linkType,\n  "slug": select(\n  pageReference->_type == "homePage" => "inicio",\n  pageReference->_type == "contactPage" => "contato",\n  pageReference->slug.current\n),\n  externalUrl,\n  openInNewTab\n }\n  },\n  _type == "gallery" => {\n    ...,\n    "images": images[] { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n    autoplay,\n    "autoplayInterval": coalesce(autoplayInterval, 4)\n  },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "horizontalRule" => {\n    ...\n  },\n  _type == "richText" => {\n    ...,\n    content[] { \n  ...,\n  _type == "image" => { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "downloadableFile" => { \n  ...,\n  "url": asset->url\n },\n },\n    background,\n  },\n }\n\n  }\n': ALL_PAGES_QUERY_RESULT;
     '\n  *[_id == "siteSettings"][0] {\n    title,\n    defaultSeoDescription,\n    "logo": logo {\n      \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n,\n    },\n    "mainMenu": {\n      "label": coalesce(mainMenu.label, "Menu Principal"),\n      "items": coalesce(mainMenu.items[] { \n  _key,\n  "label": coalesce(label, pageReference->title),\n  "slug": select(\n    pageReference->_type == "homePage" => "inicio",\n    pageReference->_type == "contactPage" => "contato",\n    pageReference->slug.current\n  ),\n  "isDropdown": count(submenu) > 0,\n  submenu[] {\n    _key,\n    "label": coalesce(label, pageReference->title),\n    "slug": select(\n  pageReference->_type == "homePage" => "inicio",\n  pageReference->_type == "contactPage" => "contato",\n  pageReference->slug.current\n),\n  }\n }, [])\n    },\n    "footerMenu": {\n      "label": coalesce(footerMenu.label, "Navega\xE7\xE3o"),\n      "items": coalesce(footerMenu.items[] { \n  _key,\n  "label": coalesce(label, pageReference->title),\n  "slug": select(\n    pageReference->_type == "homePage" => "inicio",\n    pageReference->_type == "contactPage" => "contato",\n    pageReference->slug.current\n  ),\n  "isDropdown": count(submenu) > 0,\n  submenu[] {\n    _key,\n    "label": coalesce(label, pageReference->title),\n    "slug": select(\n  pageReference->_type == "homePage" => "inicio",\n  pageReference->_type == "contactPage" => "contato",\n  pageReference->slug.current\n),\n  }\n }, [])\n    },\n    "socialLinks": coalesce(socialLinks[] {\n      platform,\n      url,\n      label,\n      "image": image {\n        \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n\n      }\n    }, []),\n    "contactInfo": coalesce(contactInfo {\n      address,\n      phones,\n      emails\n    }, { "address": null, "phones": [], "emails": [] })\n  }\n': SITE_SETTINGS_QUERY_RESULT;
     '\n  *[_type == "page" && slug.current == "transparencia"][0] {\n    \n  \n  _id,\n  title,\n  excerpt,\n  \n  "slug": slug.current\n\n,\n  \n  hero {\n    heading,\n    tagline,\n  }\n,\n  "featuredImage": featuredImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n, showInPage },\n  "pageBuilder": pageBuilder[] { \n  _key,\n  _type,\n  _type == "ctaSection" => {\n    ...,\n    "primaryCta": primaryCta { \n  label,\n  linkType,\n  "slug": select(\n  pageReference->_type == "homePage" => "inicio",\n  pageReference->_type == "contactPage" => "contato",\n  pageReference->slug.current\n),\n  externalUrl,\n  openInNewTab\n },\n    "secondaryCta": secondaryCta { \n  label,\n  linkType,\n  "slug": select(\n  pageReference->_type == "homePage" => "inicio",\n  pageReference->_type == "contactPage" => "contato",\n  pageReference->slug.current\n),\n  externalUrl,\n  openInNewTab\n }\n  },\n  _type == "textWithIllustration" => {\n    ...,\n    "image": image { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n    "cta": cta { \n  label,\n  linkType,\n  "slug": select(\n  pageReference->_type == "homePage" => "inicio",\n  pageReference->_type == "contactPage" => "contato",\n  pageReference->slug.current\n),\n  externalUrl,\n  openInNewTab\n }\n  },\n  _type == "gallery" => {\n    ...,\n    "images": images[] { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n    autoplay,\n    "autoplayInterval": coalesce(autoplayInterval, 4)\n  },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "horizontalRule" => {\n    ...\n  },\n  _type == "richText" => {\n    ...,\n    content[] { \n  ...,\n  _type == "image" => { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n },\n  _type == "videoFile" => { \n  ...,\n  "file": {\n    "url": file.asset->url,\n    "mimeType": file.asset->mimeType\n  },\n  "posterImage": posterImage { \n  hotspot,\n  crop,  \n  alt,    \n  caption, \n  asset-> {\n    _id,\n    url, \n    altText,\n    metadata {\n      lqip, \n      dimensions {\n        width,\n        height,\n        aspectRatio\n      }\n    }\n  }\n }\n },\n  _type == "youtubeEmbed" => { \n  ...,\n  url,\n  caption\n },\n  _type == "downloadableFile" => { \n  ...,\n  "url": asset->url\n },\n },\n    background,\n  },\n }\n\n  }\n': TRANSPARENCY_INDEX_PAGE_QUERY_RESULT;

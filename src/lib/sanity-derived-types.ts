@@ -5,6 +5,7 @@
 import type {
   ALL_PAGES_QUERY_RESULT,
   ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT,
+  HOME_PAGE_QUERY_RESULT,
   SITE_SETTINGS_QUERY_RESULT,
 } from "@/lib/sanity.types";
 
@@ -98,3 +99,15 @@ export type ContactInfoValue = NonNullable<QueryContactInfo>[QueryContactInfoKey
 export type TransparencyProjectStatus = NonNullable<
   NonNullable<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT>[number]["projects"]
 >[number]["status"];
+
+// ============================================================================
+// Home Page Types - derived from GROQ projection
+// ============================================================================
+
+export type HomePageCta = NonNullable<NonNullable<HOME_PAGE_QUERY_RESULT>["primaryCta"]>;
+
+export type HomeProjectsPreviewSection = NonNullable<NonNullable<HOME_PAGE_QUERY_RESULT>["projectsPreview"]>;
+
+export type HomeMissionSection = NonNullable<NonNullable<HOME_PAGE_QUERY_RESULT>["missionSection"]>;
+
+export type HomeBlockHighlightSection = NonNullable<NonNullable<HOME_PAGE_QUERY_RESULT>["blockHighlightSection"]>;
