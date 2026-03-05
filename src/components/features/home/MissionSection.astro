@@ -1,0 +1,128 @@
+---
+import SanityImage from "@/components/common/SanityImage";
+import AnimatedFadeUp from "@/components/features/home/AnimatedFadeUp";
+import AnimatedImageWrapper from "@/components/features/home/AnimatedImageWrapper";
+import Container from "@/components/layout/Container.astro";
+import PageSection from "@/components/layout/PageSection.astro";
+import type { HomeMissionSection } from "@/lib/sanity-derived-types";
+import { cn } from "@/lib/utils/ui-utils";
+import { Heart, Music, Star, Users } from "@lucide/astro";
+
+interface Props {
+  section?: HomeMissionSection | null;
+}
+
+const { section } = Astro.props;
+
+const pillars = (section?.pillars ?? []).filter((pillar) => pillar?.title || pillar?.description);
+
+const PILLAR_ICON_MAP = {
+  music: Music,
+  heart: Heart,
+  users: Users,
+  star: Star,
+} as const;
+
+const PILLAR_COLOR_MAP = {
+  primary: "bg-primary",
+  secondary: "bg-secondary",
+  accent: "bg-accent",
+  primaryLight: "bg-primary-light",
+  secondaryDark: "bg-secondary-dark",
+} as const;
+
+const hasContent = !!section && (section.heading || section.label || section.image?.asset || pillars.length > 0);
+---
+
+{
+  hasContent && (
+    <PageSection py="lg" bg="default">
+      <Container size="xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start lg:py-12">
+          {/* ── Coluna de texto ── */}
+          <div class="flex flex-col justify-center">
+            {/* Heading */}
+            <div class="mb-3">
+              {section?.label && (
+                <AnimatedFadeUp client:visible delay={0.1}>
+                  <p class="heading-label-on-light mb-2">{section.label}</p>
+                </AnimatedFadeUp>
+              )}
+              {section?.heading && (
+                <AnimatedFadeUp client:visible delay={0.2}>
+                  <h2 class="heading-2 text-3xl md:text-4xl leading-tight text-balance">
+                    {section.heading}
+                    {section?.headingHighlight && <span class="text-primary ml-2">{section.headingHighlight}</span>}
+                  </h2>
+                </AnimatedFadeUp>
+              )}
+            </div>
+
+            {section?.description && (
+              <AnimatedFadeUp client:visible delay={0.3}>
+                <p class="body-text mb-4 text-pretty">{section.description}</p>
+              </AnimatedFadeUp>
+            )}
+            {section?.secondaryDescription && (
+              <AnimatedFadeUp client:visible delay={0.4}>
+                <p class="body-text mb-8 text-pretty">{section.secondaryDescription}</p>
+              </AnimatedFadeUp>
+            )}
+
+            {/* Pillars */}
+            {pillars.length > 0 && (
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                {pillars.map((pillar, index) => {
+                  const iconKey = (pillar?.icon ?? "music") as keyof typeof PILLAR_ICON_MAP;
+                  const Icon = PILLAR_ICON_MAP[iconKey] || Music;
+                  const colorKey = (pillar?.color ?? "primary") as keyof typeof PILLAR_COLOR_MAP;
+                  const colorClass = PILLAR_COLOR_MAP[colorKey] || PILLAR_COLOR_MAP.primary;
+
+                  return (
+                    <AnimatedFadeUp client:visible delay={0.3 + index * 0.1} className="h-full">
+                      <div class="h-full flex items-start gap-3 p-4 rounded-xl bg-cream border border-border hover:border-primary/30 hover:shadow-sm transition-all duration-200">
+                        <div class={cn("w-9 h-9 rounded-lg flex items-center justify-center shrink-0", colorClass)}>
+                          <Icon class="w-4 h-4 text-white" aria-hidden="true" />
+                        </div>
+                        <div>
+                          {pillar?.title && (
+                            <p class="text-sm font-bold text-foreground font-sans leading-snug">{pillar.title}</p>
+                          )}
+                          {pillar?.description && (
+                            <p class="text-xs text-muted-foreground font-sans leading-relaxed mt-0.5">
+                              {pillar.description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </AnimatedFadeUp>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* ── Coluna da imagem ── */}
+          <AnimatedFadeUp client:visible delay={0.2} className="relative">
+            <AnimatedImageWrapper
+              client:visible
+              className="relative z-10 rounded-2xl overflow-hidden shadow-xl bg-muted min-h-120 md:min-h-145"
+            >
+              {section?.image?.asset && (
+                <SanityImage
+                  client:visible
+                  image={section.image}
+                  width={900}
+                  height={1100}
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                  className="w-full h-full object-cover absolute inset-0"
+                />
+              )}
+              <div class="absolute inset-0 bg-linear-to-t from-primary-dark/70 via-primary-dark/10 to-transparent" />
+            </AnimatedImageWrapper>
+          </AnimatedFadeUp>
+        </div>
+      </Container>
+    </PageSection>
+  )
+}

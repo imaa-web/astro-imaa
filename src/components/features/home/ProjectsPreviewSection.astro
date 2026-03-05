@@ -1,0 +1,95 @@
+---
+import SanityImage from "@/components/common/SanityImage";
+import AnimatedFadeUp from "@/components/features/home/AnimatedFadeUp";
+import AnimatedImageWrapper from "@/components/features/home/AnimatedImageWrapper";
+import ProjectBar from "@/components/features/home/ProjectBar";
+import Container from "@/components/layout/Container.astro";
+import PageSection from "@/components/layout/PageSection.astro";
+import type { HomeProjectsPreviewSection } from "@/lib/sanity-derived-types";
+
+interface Props {
+  section?: HomeProjectsPreviewSection | null;
+}
+
+const { section } = Astro.props;
+
+const projects = (section?.projects ?? []).filter((project) => project?.title || project?.description);
+
+const PROJECT_ACCENT_MAP = {
+  secondary: "bg-secondary",
+  destructive: "bg-destructive",
+  primary: "bg-primary",
+  primaryLight: "bg-primary-light",
+  accent: "bg-accent",
+} as const;
+
+const hasContent = !!section && (section.heading || section.label || section.image?.asset || projects.length > 0);
+---
+
+{
+  hasContent && (
+    <PageSection py="lg" class="bg-primary-dark text-primary-foreground overflow-hidden">
+      <Container size="xl" class="lg:py-12">
+        <div class="text-center mb-12">
+          {section?.label && (
+            <AnimatedFadeUp client:visible delay={0.1}>
+              <p class="heading-label">{section.label}</p>
+            </AnimatedFadeUp>
+          )}
+          {section?.heading && (
+            <AnimatedFadeUp client:visible delay={0.2}>
+              <h2 class="heading-2 mt-3 text-primary-foreground text-balance">{section.heading}</h2>
+            </AnimatedFadeUp>
+          )}
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          <AnimatedFadeUp client:visible delay={0.2} className="relative">
+            {/* Borda decorativa menor, só na metade inferior */}
+
+            <AnimatedImageWrapper
+              client:visible
+              className="relative z-10 h-90 md:h-105 rounded-2xl overflow-hidden bg-primary/20"
+            >
+              {section?.image?.asset && (
+                <SanityImage
+                  client:visible
+                  image={section.image}
+                  width={900}
+                  height={700}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="w-full h-full object-cover"
+                />
+              )}
+              <div class="absolute inset-0 bg-linear-to-t from-primary-dark/70 via-primary-dark/10 to-transparent" />
+            </AnimatedImageWrapper>
+          </AnimatedFadeUp>
+
+          <div>
+            {projects.length > 0 && (
+              <div class="space-y-6">
+                {projects.map((project, index) => {
+                  const accentKey = (project?.accent ?? "secondary") as keyof typeof PROJECT_ACCENT_MAP;
+                  const accentClass = PROJECT_ACCENT_MAP[accentKey] || PROJECT_ACCENT_MAP.secondary;
+                  return (
+                    <div class="relative pl-5 py-1">
+                      <ProjectBar client:visible colorClass={accentClass} index={index} />
+                      <AnimatedFadeUp client:visible delay={0.2 + index * 0.1}>
+                        <h3 class="text-lg font-bold text-primary-foreground font-serif mb-1">{project?.title}</h3>
+                        {project?.description && (
+                          <p class="text-sm text-primary-foreground/70 leading-relaxed font-sans">
+                            {project.description}
+                          </p>
+                        )}
+                      </AnimatedFadeUp>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </Container>
+    </PageSection>
+  )
+}
