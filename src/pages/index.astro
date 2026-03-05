@@ -1,13 +1,14 @@
 ---
 import HeroSection from "@/components/features/home/HeroSection";
+import MissionSection from "@/components/features/home/MissionSection.astro";
+import ProjectsPreviewSection from "@/components/features/home/ProjectsPreviewSection.astro";
 import SocialSection from "@/components/features/home/SocialSection.astro";
 import Layout from "@/layouts/Layout.astro";
 import { loadQuery } from "@/lib/load-query";
 import { HOME_PAGE_QUERY } from "@/lib/queries/home";
 import { getEntry } from "astro:content";
-import type { HOME_PAGE_QUERY_RESULT } from "@/lib/sanity.types";
 import type { QuerySocialLinkWithImage } from "@/lib/sanity-derived-types";
-import UnderConstruction from "@/components/sections/UnderConstruction.astro";
+import type { HOME_PAGE_QUERY_RESULT } from "@/lib/sanity.types";
 
 const [{ data: homePage }, siteSettings] = await Promise.all([
   loadQuery<HOME_PAGE_QUERY_RESULT>({ query: HOME_PAGE_QUERY }),
@@ -30,8 +31,10 @@ const socialLinks: QuerySocialLinkWithImage[] = (siteSettings?.data.socialLinks 
     logo={logo}
     primaryCta={homePage?.primaryCta ?? null}
     secondaryCta={homePage?.secondaryCta ?? null}
+    blockHighlight={homePage?.blockHighlightSection ?? null}
   />
-  <UnderConstruction />
+  <MissionSection section={homePage?.missionSection ?? null} />
+  <ProjectsPreviewSection section={homePage?.projectsPreview ?? null} />
   <SocialSection socialLinks={socialLinks} />
 </Layout>
 

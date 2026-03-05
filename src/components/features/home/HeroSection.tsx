@@ -1,20 +1,21 @@
 import streamers from "@/assets/streamers-colorful.png";
 import SanityImage from "@/components/common/SanityImage";
+import BlockHighlightSection from "@/components/features/home/BlockHighlightSection";
 import { Button } from "@/components/ui/button";
 import { CARNIVAL_BLOCK_NAME, DEFAULT_DESCRIPTION, INSTITUTE_NAME } from "@/lib/constants";
-import type { SanityImageBase } from "@/lib/sanity-derived-types";
-import type { HOME_PAGE_QUERY_RESULT } from "@/lib/sanity.types";
+import type { HomeBlockHighlightSection, HomePageCta, SanityImageBase } from "@/lib/sanity-derived-types";
 import { resolveCta } from "@/lib/utils/link-utils";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowRight, ChevronDown, ExternalLink } from "lucide-react";
 import { motion } from "motion/react";
 
-type HeroCta = NonNullable<HOME_PAGE_QUERY_RESULT>["primaryCta"];
+type HeroCta = HomePageCta | null;
 
 interface HeroSectionProps {
   description?: string | null;
   logo?: SanityImageBase | null;
   primaryCta?: HeroCta;
   secondaryCta?: HeroCta;
+  blockHighlight?: HomeBlockHighlightSection | null;
 }
 
 interface CtaButtonProps {
@@ -29,12 +30,10 @@ function CtaButton({ cta, variant = "default", className }: Readonly<CtaButtonPr
   if (!resolvedCta) return null;
   return (
     <Button asChild size="lg" variant={variant} className={className}>
-      <motion.a
+      <a
         href={resolvedCta.href}
         target={resolvedCta.openInNewTab ? "_blank" : undefined}
         rel={resolvedCta.openInNewTab ? "noopener noreferrer" : undefined}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
       >
         {cta.label}
         {resolvedCta.openInNewTab && <span className="sr-only">(abre em nova aba)</span>}
@@ -43,7 +42,7 @@ function CtaButton({ cta, variant = "default", className }: Readonly<CtaButtonPr
         ) : (
           <ArrowRight className="w-4 h-4" aria-hidden="true" />
         )}
-      </motion.a>
+      </a>
     </Button>
   );
 }
@@ -79,22 +78,28 @@ function BlurRevealText({
   );
 }
 
-export default function HeroSection({ description, logo, primaryCta, secondaryCta }: Readonly<HeroSectionProps>) {
+export default function HeroSection({
+  description,
+  logo,
+  primaryCta,
+  secondaryCta,
+  blockHighlight,
+}: Readonly<HeroSectionProps>) {
   return (
-    <section className="relative min-h-[calc(100vh-5rem)] flex items-center overflow-hidden bg-[radial-gradient(circle,rgba(27,122,59,1)_0%,rgba(0,86,28,1)_40%,rgba(5,33,14,1)_100%)]">
+    <section className="relative overflow-hidden bg-[linear-gradient(to_bottom,rgba(27,122,59,1)_0%,rgba(0,86,28,1)_18%,rgba(5,33,14,1)_60%,rgba(5,33,14,1)_78%)]">
+      {/* Streamers decorativos */}
       <img
         src={streamers.src}
         alt=""
         aria-hidden="true"
-        className="absolute top-0 left-0 z-0 w-full h-auto pointer-events-none blur-[1px] brightness-100"
+        className="absolute top-0 left-0 z-0 w-full h-auto pointer-events-none blur-[1px]"
       />
 
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-6 md:px-10 lg:px-16 max-w-6xl py-16 mb-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16 items-center">
-          {/* Text */}
+      {/* ── Hero ── */}
+      <div className="relative z-10 container mx-auto px-6 md:px-10 lg:px-16 max-w-7xl pt-16 lg:min-h-[calc(100vh-5rem)] flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16 items-center w-full">
+          {/* Texto */}
           <motion.div variants={containerVariants} initial="hidden" animate="visible" className="order-2 lg:order-1">
-            {/* Heading */}
             <motion.h1 variants={itemVariants} className="mb-6 leading-tight">
               <span className="block uppercase text-lg md:text-3xl font-sans font-semibold mb-3 text-pretty">
                 <BlurRevealText
@@ -112,7 +117,6 @@ export default function HeroSection({ description, logo, primaryCta, secondaryCt
               </span>
             </motion.h1>
 
-            {/* Gradient divider */}
             <motion.div variants={itemVariants} className="h-px w-32 mb-6 gradient-colors" />
 
             <motion.p
@@ -127,7 +131,7 @@ export default function HeroSection({ description, logo, primaryCta, secondaryCt
               <CtaButton
                 cta={secondaryCta}
                 variant="outline"
-                className="border-white/20 text-white/80 hover:bg-white/5 hover:border-white/40 bg-transparent"
+                className="text-white/80 hover:bg-white/5 bg-transparent"
               />
             </motion.div>
           </motion.div>
@@ -140,18 +144,13 @@ export default function HeroSection({ description, logo, primaryCta, secondaryCt
             transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
           >
             <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 xl:w-md xl:h-112">
-              {/* Glow rings */}
               <div className="absolute inset-8 rounded-full blur-2xl opacity-50 bg-secondary" />
               <div className="absolute inset-16 rounded-full blur-3xl opacity-40 bg-accent" />
-
               {logo && (
                 <motion.div
                   className="absolute inset-0"
                   animate={{ rotate: [0, -1.5, 1.5, -1, 1, 0] }}
-                  transition={{
-                    duration: 3,
-                    ease: "easeInOut",
-                  }}
+                  transition={{ duration: 3, ease: "easeInOut" }}
                 >
                   <SanityImage
                     image={logo}
@@ -165,17 +164,23 @@ export default function HeroSection({ description, logo, primaryCta, secondaryCt
             </div>
           </motion.div>
         </div>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-0 left-1/2 -translate-y-8 -translate-x-1/2 z-20 hidden lg:flex flex-col items-center gap-1">
+          <span className="text-xs text-white/30 uppercase tracking-widest font-sans">Role para ver mais</span>
+          <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+            <ChevronDown className="w-6 h-6 text-white/25" />
+          </motion.div>
+        </div>
       </div>
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 0.6, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut", delay: 0.5 }}
+        className="h-px w-full lg:hidden mx-auto my-12 gradient-colors"
+      />
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2">
-        <span className="text-xs text-white/30 uppercase tracking-widest font-sans">Role para ver mais</span>
-        <motion.div
-          className="w-px h-10 bg-linear-to-b from-white/30 to-transparent"
-          animate={{ opacity: [0.3, 0.8, 0.3] }}
-          transition={{ duration: 2.5, repeat: Infinity }}
-        />
-      </div>
+      {/* ── Block Highlight ── */}
+      <BlockHighlightSection blockHighlight={blockHighlight} />
     </section>
   );
 }
