@@ -25,17 +25,26 @@ export const TRANSPARENCY_INDEX_PAGE_QUERY = defineQuery(`
   }
 `);
 
-// Query completa — usada tanto para getStaticPaths quanto para as props da página
+const TRANSPARENCY_SECTION_FRAGMENT = `
+  _id,
+  title,
+  ${SLUG_FRAGMENT},
+  ${HERO_FRAGMENT},
+  partner,
+  excerpt,
+  description[] { ${PORTABLE_TEXT_FRAGMENT} },
+  projects[] { ${TRANSPARENCY_PROJECT_FRAGMENT} },
+  documents[] { ${DOWNLOADABLE_FILE_FRAGMENT} },
+`;
+
 export const ALL_TRANSPARENCY_SECTIONS_QUERY = defineQuery(`
   *[_type == "transparencySection"] | order(order asc) {
-    _id,
-    title,
-    ${SLUG_FRAGMENT},
-    ${HERO_FRAGMENT},
-    partner,
-    excerpt,
-    description[] { ${PORTABLE_TEXT_FRAGMENT} },
-    projects[] { ${TRANSPARENCY_PROJECT_FRAGMENT} },
-    documents[] { ${DOWNLOADABLE_FILE_FRAGMENT} },
+    ${TRANSPARENCY_SECTION_FRAGMENT}
+  }
+`);
+
+export const TRANSPARENCY_SECTION_BY_SLUG_QUERY = defineQuery(`
+  *[_type == "transparencySection" && slug.current == $slug][0] {
+    ${TRANSPARENCY_SECTION_FRAGMENT}
   }
 `);
