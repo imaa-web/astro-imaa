@@ -1,10 +1,15 @@
 ---
 import Navbar from "@/components/layout/navigation/Navbar";
 import type { QueryMenuItem, QuerySocialLink } from "@/lib/sanity-derived-types";
-import { getEntry } from "astro:content";
+import type { SITE_SETTINGS_QUERY_RESULT } from "@/lib/sanity.types";
 
-const siteSettings = await getEntry("siteSettings", "site-settings");
-const mainMenu = siteSettings?.data.mainMenu || { label: "", items: [] };
+interface Props {
+  siteSettings: SITE_SETTINGS_QUERY_RESULT;
+}
+
+const { siteSettings } = Astro.props;
+
+const mainMenu = siteSettings?.mainMenu || { label: "", items: [] };
 
 const menuItems: QueryMenuItem[] = (mainMenu.items ?? []).map((item) => ({
   ...item,
@@ -13,7 +18,7 @@ const menuItems: QueryMenuItem[] = (mainMenu.items ?? []).map((item) => ({
 
 const VALID_PLATFORMS = ["bluesky", "facebook", "instagram", "twitter", "youtube"] as const;
 
-const socialLinks: QuerySocialLink[] = (siteSettings?.data.socialLinks ?? []).filter((link): link is QuerySocialLink =>
+const socialLinks: QuerySocialLink[] = (siteSettings?.socialLinks ?? []).filter((link): link is QuerySocialLink =>
   VALID_PLATFORMS.includes(link.platform as (typeof VALID_PLATFORMS)[number]),
 );
 
@@ -25,5 +30,5 @@ const currentPath = Astro.url.pathname;
   currentPath={currentPath}
   menuItems={menuItems}
   socialLinks={socialLinks}
-  logo={siteSettings?.data.logo}
+  logo={siteSettings?.logo}
 />

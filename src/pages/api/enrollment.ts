@@ -1,5 +1,3 @@
-export const prerender = false;
-
 import { sendEnrollmentEmail } from "@/lib/email";
 import { verifyTurnstile } from "@/lib/utils/form-utils";
 import type { APIRoute } from "astro";

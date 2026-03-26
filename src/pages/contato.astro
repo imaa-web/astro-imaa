@@ -5,19 +5,19 @@ import Container from "@/components/layout/Container.astro";
 import PageSection from "@/components/layout/PageSection.astro";
 import PageHero from "@/components/sections/PageHero.astro";
 import Layout from "@/layouts/Layout.astro";
+import { fetchSiteSettings } from "@/lib/fetch-site-settings";
 import { loadQuery } from "@/lib/load-query";
 import { CONTACT_PAGE_QUERY } from "@/lib/queries/contact";
-import type { QueryContactInfo, QuerySocialLink } from "@/lib/sanity-derived-types";
+
 import type { CONTACT_PAGE_QUERY_RESULT } from "@/lib/sanity.types";
-import { getEntry } from "astro:content";
 
 const [{ data: contactPage }, siteSettings] = await Promise.all([
   loadQuery<CONTACT_PAGE_QUERY_RESULT>({ query: CONTACT_PAGE_QUERY }),
-  getEntry("siteSettings", "site-settings"),
+  fetchSiteSettings(),
 ]);
 
-const contactInfo = siteSettings?.data.contactInfo as QueryContactInfo | null;
-const socialLinks = (siteSettings?.data.socialLinks ?? []) as QuerySocialLink[];
+const contactInfo = siteSettings?.contactInfo ?? null;
+const socialLinks = siteSettings?.socialLinks ?? [];
 
 const enrollmentFormFields = (contactPage?.enrollmentFormFields ?? [])
   .filter(
@@ -32,7 +32,7 @@ const enrollmentFormFields = (contactPage?.enrollmentFormFields ?? [])
 
 <Layout
   title={contactPage?.heading ?? "Contato"}
-  description={contactPage?.seoDescription ?? siteSettings?.data.defaultSeoDescription ?? ""}
+  description={contactPage?.seoDescription ?? siteSettings?.defaultSeoDescription ?? ""}
 >
   <PageHero heading={contactPage?.heading ?? "Entre em Contato"} tagline={contactPage?.tagline} containerSize="xl" />
 

@@ -5,19 +5,23 @@ import FooterBrand from "@/components/layout/footer/FooterBrand.astro";
 import FooterContact from "@/components/layout/footer/FooterContact.astro";
 import FooterNav from "@/components/layout/footer/FooterNav.astro";
 import { DEFAULT_TITLE } from "@/lib/constants";
-import type { QueryContactInfo, QueryMenuItem, QuerySocialLink } from "@/lib/sanity-derived-types";
-import { getEntry } from "astro:content";
+import type { QueryMenuItem } from "@/lib/sanity-derived-types";
+import type { SITE_SETTINGS_QUERY_RESULT } from "@/lib/sanity.types";
 
-const siteSettings = await getEntry("siteSettings", "site-settings");
+interface Props {
+  siteSettings: SITE_SETTINGS_QUERY_RESULT;
+}
 
-const title = siteSettings?.data.title || DEFAULT_TITLE;
-const footerMenu = siteSettings?.data.footerMenu || { label: "", items: [] };
+const { siteSettings } = Astro.props;
+
+const title = siteSettings?.title || DEFAULT_TITLE;
+const footerMenu = siteSettings?.footerMenu || { label: "", items: [] };
 const menuItems: QueryMenuItem[] = (footerMenu.items ?? []).map((item) => ({
   ...item,
   submenu: item.submenu ?? null,
 }));
-const socialLinks = (siteSettings?.data.socialLinks ?? []) as QuerySocialLink[];
-const contactInfo = siteSettings?.data.contactInfo as QueryContactInfo | null;
+const socialLinks = siteSettings?.socialLinks ?? [];
+const contactInfo = siteSettings?.contactInfo ?? null;
 ---
 
 <footer class="bg-primary-dark text-primary-foreground">
@@ -27,9 +31,9 @@ const contactInfo = siteSettings?.data.contactInfo as QueryContactInfo | null;
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10">
       <div class="col-span-1 sm:col-span-2 lg:col-span-5">
         <FooterBrand
-          description={siteSettings?.data.defaultSeoDescription}
+          description={siteSettings?.defaultSeoDescription}
           socialLinks={socialLinks}
-          logo={siteSettings?.data.logo}
+          logo={siteSettings?.logo}
         />
       </div>
 

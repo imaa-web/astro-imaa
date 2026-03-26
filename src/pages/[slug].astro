@@ -6,31 +6,25 @@ import UnderConstruction from "@/components/sections/UnderConstruction.astro";
 import Layout from "@/layouts/Layout.astro";
 import { DEFAULT_TITLE } from "@/lib/constants";
 import { loadQuery } from "@/lib/load-query";
-import { ALL_PAGES_QUERY } from "@/lib/queries/page";
-import { type ALL_PAGES_QUERY_RESULT } from "@/lib/sanity.types";
-import type { GetStaticPaths } from "astro";
+import { PAGE_BY_SLUG_QUERY } from "@/lib/queries/page";
+import type { ALL_PAGES_QUERY_RESULT } from "@/lib/sanity.types";
 
-export const getStaticPaths = (async () => {
-  const { data: pages } = await loadQuery<ALL_PAGES_QUERY_RESULT>({
-    query: ALL_PAGES_QUERY,
-  });
+type PageBySlugResult = ALL_PAGES_QUERY_RESULT[number] | null;
 
-  return (pages ?? [])
-    .filter((page) => page.slug != null)
-    .map((page) => ({
-      params: { slug: page.slug! },
-      props: { page },
-    }));
-}) satisfies GetStaticPaths;
-
-const { page } = Astro.props;
 const { slug } = Astro.params;
+
+const { data: page } = await loadQuery<PageBySlugResult>({
+  query: PAGE_BY_SLUG_QUERY,
+  params: { slug },
+});
+
+if (!page) return Astro.rewrite("/404");
 ---
 
 <Layout title={page.title ?? DEFAULT_TITLE} description={page.excerpt ?? ""} image={page.featuredImage}>
   <PageHero heading={page.hero?.heading ?? page.title ?? DEFAULT_TITLE} tagline={page.hero?.tagline} />
   {
-    slug.includes("projetos") || slug.includes("galeria") ? (
+    slug?.includes("projetos") || slug?.includes("galeria") ? (
       <UnderConstruction />
     ) : (
       <>

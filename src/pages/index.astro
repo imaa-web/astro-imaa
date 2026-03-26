@@ -4,26 +4,26 @@ import MissionSection from "@/components/features/home/MissionSection.astro";
 import ProjectsPreviewSection from "@/components/features/home/ProjectsPreviewSection.astro";
 import SocialSection from "@/components/features/home/SocialSection.astro";
 import Layout from "@/layouts/Layout.astro";
+import { fetchSiteSettings } from "@/lib/fetch-site-settings";
 import { loadQuery } from "@/lib/load-query";
 import { HOME_PAGE_QUERY } from "@/lib/queries/home";
-import { getEntry } from "astro:content";
 import type { QuerySocialLinkWithImage } from "@/lib/sanity-derived-types";
 import type { HOME_PAGE_QUERY_RESULT } from "@/lib/sanity.types";
 
 const [{ data: homePage }, siteSettings] = await Promise.all([
   loadQuery<HOME_PAGE_QUERY_RESULT>({ query: HOME_PAGE_QUERY }),
-  getEntry("siteSettings", "site-settings"),
+  fetchSiteSettings(),
 ]);
 
-const logo = homePage?.logo ?? siteSettings?.data.logo ?? null;
-const socialLinks: QuerySocialLinkWithImage[] = (siteSettings?.data.socialLinks ?? []).filter(
+const logo = homePage?.logo ?? siteSettings?.logo ?? null;
+const socialLinks: QuerySocialLinkWithImage[] = (siteSettings?.socialLinks ?? []).filter(
   (s): s is QuerySocialLinkWithImage => s.platform != null && s.url != null,
 );
 ---
 
 <Layout
   title={homePage?.title ?? "Início"}
-  description={homePage?.excerpt ?? siteSettings?.data.defaultSeoDescription ?? ""}
+  description={homePage?.excerpt ?? siteSettings?.defaultSeoDescription ?? ""}
 >
   <HeroSection
     client:load

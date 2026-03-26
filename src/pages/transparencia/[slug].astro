@@ -8,28 +8,23 @@ import PageHero from "@/components/sections/PageHero.astro";
 import BackLink from "@/components/ui/BackLink.astro";
 import Layout from "@/layouts/Layout.astro";
 import { loadQuery } from "@/lib/load-query";
-import { ALL_TRANSPARENCY_SECTIONS_QUERY } from "@/lib/queries/transparency";
+import { TRANSPARENCY_SECTION_BY_SLUG_QUERY } from "@/lib/queries/transparency";
 import type { ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT } from "@/lib/sanity.types";
 import { cn } from "@/lib/utils/ui-utils";
 import { FileText } from "@lucide/astro";
-import type { GetStaticPaths } from "astro";
 
-export const getStaticPaths = (async () => {
-  const { data: sections } = await loadQuery<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT>({
-    query: ALL_TRANSPARENCY_SECTIONS_QUERY,
-  });
+type TransparencySectionBySlugResult = ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT[number] | null;
 
-  return (sections ?? [])
-    .filter((section) => section.slug != null)
-    .map((section) => ({
-      params: { slug: section.slug! },
-      props: { section },
-    }));
-}) satisfies GetStaticPaths;
+const { slug } = Astro.params;
 
-const { section } = Astro.props;
+if (!slug) return Astro.rewrite("/404");
 
-if (!section) return Astro.redirect("/transparencia");
+const { data: section } = await loadQuery<TransparencySectionBySlugResult>({
+  query: TRANSPARENCY_SECTION_BY_SLUG_QUERY,
+  params: { slug },
+});
+
+if (!section) return Astro.rewrite("/404");
 
 const hasDescription = (section.description?.length ?? 0) > 0;
 const hasProjects = (section.projects?.length ?? 0) > 0;
