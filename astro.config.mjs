@@ -7,34 +7,21 @@ import tailwindcss from "@tailwindcss/vite";
 
 import cloudflare from "@astrojs/cloudflare";
 
-import sitemap from "@astrojs/sitemap";
-
 // https://astro.build/config
 export default defineConfig({
-  site: "https://institutomaestroabiud.org.br",
-  integrations: [react(), sitemap()],
+  site: "https://www.institutomaestroabiud.org.br",
+  output: "server",
+  integrations: [react()],
 
   vite: {
+    // @ts-ignore
     plugins: [tailwindcss()],
   },
 
   adapter: cloudflare({
-    imageService: "compile",
-    routes: {
-      extend: {
-        exclude: [
-          { pattern: "/sitemap.xml" },
-          { pattern: "/sitemap-index.xml" },
-          { pattern: "/*.webp" },
-          { pattern: "/*.png" },
-          { pattern: "/*.jpg" },
-          { pattern: "/*.jpeg" },
-          { pattern: "/*.svg" },
-          { pattern: "/*.ico" },
-          { pattern: "/*.txt" },
-          { pattern: "/assets/*" },
-        ],
-      },
-    },
+    imageService: "passthrough",
   }),
+  devToolbar: {
+    enabled: false,
+  },
 });
