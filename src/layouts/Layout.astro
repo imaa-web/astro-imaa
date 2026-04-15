@@ -6,6 +6,7 @@ import BackToTopButton from "@/components/ui/BackToTopButton.astro";
 import { fetchSiteSettings } from "@/lib/fetch-site-settings";
 import type { SanityImageBase } from "@/lib/sanity-derived-types";
 import "@/styles/global.css";
+import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 
 interface Props {
@@ -32,6 +33,9 @@ const { title, description, canonical, image } = Astro.props;
     <Head title={title} description={description} canonical={canonical} image={image} siteSettings={siteSettings} />
     <link rel="sitemap" href="/sitemap.xml" />
     <ClientRouter />
+    <Font cssVariable="--font-inter" />
+    <Font cssVariable="--font-merriweather" />
+    <Font cssVariable="--font-work-sans" />
   </head>
   <body>
     <Header siteSettings={siteSettings} />

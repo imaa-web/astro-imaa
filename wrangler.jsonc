@@ -1,8 +1,8 @@
 {
-  "compatibility_date": "2026-03-17",
+  "compatibility_date": "2026-04-08",
   "compatibility_flags": ["global_fetch_strictly_public", "nodejs_compat"],
   "name": "astro-imaa",
-  "main": "dist/_worker.js/index.js",
+  "main": "@astrojs/cloudflare/entrypoints/server",
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

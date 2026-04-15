@@ -13,6 +13,8 @@ type PageBySlugResult = ALL_PAGES_QUERY_RESULT[number] | null;
 
 const { slug } = Astro.params;
 
+if (!slug) return Astro.rewrite("/404");
+
 const { data: page } = await loadQuery<PageBySlugResult>({
   query: PAGE_BY_SLUG_QUERY,
   params: { slug },
@@ -24,7 +26,7 @@ if (!page) return Astro.rewrite("/404");
 <Layout title={page.title ?? DEFAULT_TITLE} description={page.excerpt ?? ""} image={page.featuredImage}>
   <PageHero heading={page.hero?.heading ?? page.title ?? DEFAULT_TITLE} tagline={page.hero?.tagline} />
   {
-    slug?.includes("projetos") || slug?.includes("galeria") ? (
+    slug.includes("projetos") || slug.includes("galeria") ? (
       <UnderConstruction />
     ) : (
       <>
