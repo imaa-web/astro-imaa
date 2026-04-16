@@ -1,7 +1,8 @@
 import SanityImage from "@/components/common/SanityImage";
 import type { PageBuilderBlockOf } from "@/lib/sanity-derived-types";
+import type { Get } from "@sanity/codegen";
 
-type GalleryImage = NonNullable<PageBuilderBlockOf<"gallery">["images"]>[number];
+type GalleryImage = Get<PageBuilderBlockOf<"gallery">, "images", number>;
 
 export type ValidGalleryImage = GalleryImage & {
   asset: NonNullable<GalleryImage["asset"]> & { url: string };

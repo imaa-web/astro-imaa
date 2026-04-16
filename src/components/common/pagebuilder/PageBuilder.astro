@@ -5,10 +5,10 @@ import RichText from "@/components/common/pagebuilder/RichText.astro";
 import TextWithIllustration from "@/components/common/pagebuilder/TextWithIllustration.astro";
 import VideoFile from "@/components/common/pagebuilder/VideoFile.astro";
 import YoutubeEmbed from "@/components/common/pagebuilder/YoutubeEmbed.astro";
-import type { ALL_PAGES_QUERY_RESULT } from "@/lib/sanity.types";
+import type { PageBuilder } from "@/lib/sanity-derived-types";
 
 interface Props {
-  pageBuilder?: NonNullable<ALL_PAGES_QUERY_RESULT>[number]["pageBuilder"];
+  pageBuilder?: PageBuilder;
 }
 
 const { pageBuilder } = Astro.props;
