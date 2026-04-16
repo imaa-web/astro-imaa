@@ -2,6 +2,7 @@
 // Image Types - Base types (manual, since structure is consistent across all image types)
 // ============================================================================
 
+import type { FilterByType, Get } from "@sanity/codegen";
 import type {
   ALL_PAGES_QUERY_RESULT,
   ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT,
@@ -50,25 +51,25 @@ export interface SanityImageBase {
 // Page Builder derived types
 // ============================================================================
 
-export type PageBuilder = NonNullable<ALL_PAGES_QUERY_RESULT>[number]["pageBuilder"];
+export type PageBuilder = Get<ALL_PAGES_QUERY_RESULT, number, "pageBuilder">;
 export type PageBuilderBlock = NonNullable<PageBuilder>[number];
 export type PageBuilderBlockType = PageBuilderBlock["_type"];
 
-export type PageBuilderBlockOf<T extends PageBuilderBlockType> = Extract<PageBuilderBlock, { _type: T }>;
+export type PageBuilderBlockOf<T extends PageBuilderBlockType> = FilterByType<PageBuilderBlock, T>;
 
 // ============================================================================
 // Menu Types - derived from TypeGen query results
 // ============================================================================
 
 /** Menu item from mainMenu or footerMenu queries */
-export type QueryMenuItem = NonNullable<NonNullable<SITE_SETTINGS_QUERY_RESULT>["mainMenu"]["items"]>[number];
+export type QueryMenuItem = Get<SITE_SETTINGS_QUERY_RESULT, "mainMenu", "items", number>;
 
 // ============================================================================
 // Social & Contact Types - derived from TypeGen
 // ============================================================================
 
 /** Social link from site settings */
-export type QuerySocialLink = NonNullable<NonNullable<SITE_SETTINGS_QUERY_RESULT>["socialLinks"]>[number];
+export type QuerySocialLink = Get<SITE_SETTINGS_QUERY_RESULT, "socialLinks", number>;
 
 /** Available social platforms */
 export type SocialMediaPlatforms = NonNullable<QuerySocialLink["platform"]>;
@@ -79,13 +80,13 @@ export type QuerySocialLinkWithImage = QuerySocialLink & {
 };
 
 /** Contact info from site settings */
-export type QueryContactInfo = NonNullable<SITE_SETTINGS_QUERY_RESULT>["contactInfo"];
+export type QueryContactInfo = Get<SITE_SETTINGS_QUERY_RESULT, "contactInfo">;
 
 /** Individual phone item from contact info */
-export type QueryPhoneItem = NonNullable<NonNullable<QueryContactInfo>["phones"]>[number];
+export type QueryPhoneItem = Get<QueryContactInfo, "phones", number>;
 
 /** Individual email item from contact info */
-export type QueryEmailItem = NonNullable<NonNullable<QueryContactInfo>["emails"]>[number];
+export type QueryEmailItem = Get<QueryContactInfo, "emails", number>;
 
 /** Keys of contact info */
 export type QueryContactInfoKeys = keyof NonNullable<QueryContactInfo>;
@@ -96,18 +97,16 @@ export type ContactInfoValue = NonNullable<QueryContactInfo>[QueryContactInfoKey
 // ============================================================================
 // Transparency Types - derived from TypeGen
 // ============================================================================
-export type TransparencyProjectStatus = NonNullable<
-  NonNullable<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT>[number]["projects"]
->[number]["status"];
+export type TransparencyProjectStatus = Get<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT, number, "projects", number, "status">;
 
 // ============================================================================
 // Home Page Types - derived from GROQ projection
 // ============================================================================
 
-export type HomePageCta = NonNullable<NonNullable<HOME_PAGE_QUERY_RESULT>["primaryCta"]>;
+export type HomePageCta = Get<HOME_PAGE_QUERY_RESULT, "primaryCta">;
 
-export type HomeProjectsPreviewSection = NonNullable<NonNullable<HOME_PAGE_QUERY_RESULT>["projectsPreview"]>;
+export type HomeProjectsPreviewSection = Get<HOME_PAGE_QUERY_RESULT, "projectsPreview">;
 
-export type HomeMissionSection = NonNullable<NonNullable<HOME_PAGE_QUERY_RESULT>["missionSection"]>;
+export type HomeMissionSection = Get<HOME_PAGE_QUERY_RESULT, "missionSection">;
 
-export type HomeBlockHighlightSection = NonNullable<NonNullable<HOME_PAGE_QUERY_RESULT>["blockHighlightSection"]>;
+export type HomeBlockHighlightSection = Get<HOME_PAGE_QUERY_RESULT, "blockHighlightSection">;
