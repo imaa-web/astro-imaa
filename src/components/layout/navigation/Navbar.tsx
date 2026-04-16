@@ -40,9 +40,9 @@ export default function Navbar({ currentPath, menuItems, socialLinks, logo }: Re
             {logo && (
               <SanityImage
                 image={logo}
-                width={56}
-                height={56}
-                className="w-14 h-14 rounded-full object-cover"
+                width={48}
+                height={48}
+                className="w-12 h-12 rounded-full object-cover"
                 loading="eager"
                 alt={INSTITUTE_NAME}
               />

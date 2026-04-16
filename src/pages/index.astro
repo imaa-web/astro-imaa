@@ -37,18 +37,3 @@ const socialLinks: QuerySocialLinkWithImage[] = (siteSettings?.socialLinks ?? []
   <ProjectsPreviewSection section={homePage?.projectsPreview ?? null} />
   <SocialSection socialLinks={socialLinks} />
 </Layout>
-
-<script>
-  import confetti from "canvas-confetti";
-
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!prefersReducedMotion) {
-    confetti({
-      particleCount: 150,
-      spread: 160,
-      origin: { y: 0 },
-      gravity: 0.5,
-      ticks: 400,
-    });
-  }
-</script>

@@ -9,10 +9,13 @@ import BackLink from "@/components/ui/BackLink.astro";
 import Layout from "@/layouts/Layout.astro";
 import { loadQuery } from "@/lib/load-query";
 import { ALL_TRANSPARENCY_SECTIONS_QUERY, TRANSPARENCY_SECTION_BY_SLUG_QUERY } from "@/lib/queries/transparency";
-import type { ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT, TRANSPARENCY_SECTION_BY_SLUG_QUERY_RESULT } from "@/lib/sanity.types";
+import type {
+  ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT,
+  TRANSPARENCY_SECTION_BY_SLUG_QUERY_RESULT,
+} from "@/lib/sanity.types";
 import { cn } from "@/lib/utils/ui-utils";
-import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import { FileText } from "@lucide/astro";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 
 export const getStaticPaths = (async () => {
   const { data: sections } = await loadQuery<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT>({
@@ -37,7 +40,12 @@ if (!slug) return Astro.rewrite("/404");
 // SSR fallback: se não veio de getStaticPaths, busca direto
 const section =
   staticSection ??
-  (await loadQuery<TRANSPARENCY_SECTION_BY_SLUG_QUERY_RESULT>({ query: TRANSPARENCY_SECTION_BY_SLUG_QUERY, params: { slug } })).data;
+  (
+    await loadQuery<TRANSPARENCY_SECTION_BY_SLUG_QUERY_RESULT>({
+      query: TRANSPARENCY_SECTION_BY_SLUG_QUERY,
+      params: { slug },
+    })
+  ).data;
 
 if (!section) return Astro.rewrite("/404");
 
@@ -52,12 +60,13 @@ const hasContent = hasProjects || hasDocuments;
     heading={section.hero?.heading ?? section.title ?? "Transparência"}
     tagline={section.hero?.tagline ?? section.partner ?? ""}
     class="mb-12"
+    containerSize="lg"
   />
 
   {
     hasDescription && (
       <PageSection bg="muted" py="md">
-        <Container size="md">
+        <Container size="lg">
           <PortableTextRenderer value={section.description} class="prose-p:text-muted-foreground" />
         </Container>
       </PageSection>

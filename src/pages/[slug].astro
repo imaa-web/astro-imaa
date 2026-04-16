@@ -32,8 +32,7 @@ if (!slug) return Astro.rewrite("/404");
 
 // SSR fallback: se não veio de getStaticPaths, busca direto
 const page =
-  staticPage ??
-  (await loadQuery<PAGE_BY_SLUG_QUERY_RESULT>({ query: PAGE_BY_SLUG_QUERY, params: { slug } })).data;
+  staticPage ?? (await loadQuery<PAGE_BY_SLUG_QUERY_RESULT>({ query: PAGE_BY_SLUG_QUERY, params: { slug } })).data;
 
 if (!page) return Astro.rewrite("/404");
 
@@ -42,7 +41,11 @@ const isUnderConstruction = UNDER_CONSTRUCTION.has(slug);
 ---
 
 <Layout title={page.title ?? DEFAULT_TITLE} description={page.excerpt ?? ""} image={page.featuredImage}>
-  <PageHero heading={page.hero?.heading ?? page.title ?? DEFAULT_TITLE} tagline={page.hero?.tagline} />
+  <PageHero
+    heading={page.hero?.heading ?? page.title ?? DEFAULT_TITLE}
+    tagline={page.hero?.tagline}
+    containerSize="lg"
+  />
   {
     isUnderConstruction ? (
       <UnderConstruction />
