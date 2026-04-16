@@ -13,12 +13,12 @@ const isMuted = background === "muted";
   content &&
     (isMuted ? (
       <section class="my-pagebuilder bg-muted">
-        <Container size="md" class="py-pagebuilder">
+        <Container size="lg" class="py-pagebuilder">
           <PortableTextRenderer value={content} />
         </Container>
       </section>
     ) : (
-      <Container size="md" class="py-pagebuilder">
+      <Container size="lg" class="py-pagebuilder">
         <PortableTextRenderer value={content} />
       </Container>
     ))

@@ -79,12 +79,23 @@ export const CTA_FRAGMENT = `
   openInNewTab
 `;
 
+const PROJECT_SHOWCASE_FRAGMENT = `
+  ...,
+  items[] {
+    _key,
+    name,
+    description,
+    "cta": cta { ${CTA_FRAGMENT} }
+  }
+`;
+
 export const PORTABLE_TEXT_FRAGMENT = `
   ...,
   _type == "image" => { ${IMAGE_FRAGMENT} },
   _type == "videoFile" => { ${VIDEO_FILE_FRAGMENT} },
   _type == "youtubeEmbed" => { ${YOUTUBE_EMBED_FRAGMENT} },
   _type == "downloadableFile" => { ${DOWNLOADABLE_FILE_FRAGMENT} },
+  _type == "projectShowcaseSection" => { ${PROJECT_SHOWCASE_FRAGMENT} },
 `;
 
 export const BASE_PAGE_FRAGMENT = `
