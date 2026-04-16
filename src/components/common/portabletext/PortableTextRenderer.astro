@@ -1,8 +1,10 @@
 ---
 import PortableDownloadableFile from "@/components/common/portabletext/PortableDownloadableFile.astro";
+import PortableHardBreak from "@/components/common/portabletext/PortableHardBreak.astro";
 import PortableHR from "@/components/common/portabletext/PortableHR.astro";
 import PortableImage from "@/components/common/portabletext/PortableImage.astro";
 import PortableLink from "@/components/common/portabletext/PortableLink.astro";
+import PortableProjectShowcase from "@/components/common/portabletext/PortableProjectShowcase.astro";
 import PortableVideoFile from "@/components/common/portabletext/PortableVideoFile.astro";
 import PortableYoutubeEmbed from "@/components/common/portabletext/PortableYoutubeEmbed.astro";
 import { cn } from "@/lib/utils/ui-utils";
@@ -21,12 +23,14 @@ const components = {
     downloadableFile: PortableDownloadableFile,
     horizontalRule: PortableHR,
     image: PortableImage,
+    projectShowcaseSection: PortableProjectShowcase,
     videoFile: PortableVideoFile,
     youtubeEmbed: PortableYoutubeEmbed,
   },
   mark: {
     link: PortableLink,
   },
+  hardBreak: PortableHardBreak,
 };
 ---
 
