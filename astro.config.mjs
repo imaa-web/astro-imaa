@@ -9,26 +9,27 @@ import tailwindcss from "@tailwindcss/vite";
 
 import cloudflare from "@astrojs/cloudflare";
 
-const { DEPLOY_MODE } = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
-const isPreview = DEPLOY_MODE === "preview";
+import sitemap from "@astrojs/sitemap";
+
+const { PUBLIC_DEPLOY_MODE } = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "PUBLIC_");
+const isPreview = PUBLIC_DEPLOY_MODE === "preview";
+
+const adapterConfig = isPreview
+  ? {
+      output: "server",
+      adapter: cloudflare({ imageService: "passthrough" }),
+    }
+  : {
+      adapter: cloudflare({ imageService: "compile" }),
+    };
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://www.institutomaestroabiud.org.br",
-  ...(isPreview && {
-    output: "server",
-    adapter: cloudflare({
-      imageService: "passthrough",
-    }),
-  }),
 
-  ...(!isPreview && {
-    adapter: cloudflare({
-      imageService: "compile",
-    }),
-  }),
+  ...adapterConfig,
 
-  integrations: [react()],
+  integrations: [react(), sitemap()],
 
   vite: {
     // @ts-ignore
@@ -54,6 +55,7 @@ export default defineConfig({
       provider: fontProviders.fontsource(),
       name: "Work Sans",
       cssVariable: "--font-work-sans",
+      weights: ["700 900"],
     },
   ],
 });
