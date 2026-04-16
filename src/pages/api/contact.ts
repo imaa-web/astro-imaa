@@ -1,7 +1,7 @@
 export const prerender = false;
 
 import { sendContactEmail } from "@/lib/email";
-import { verifyTurnstile } from "@/lib/utils/form-utils";
+import { verifyTurnstile } from "@/lib/server/turnstile";
 import type { APIRoute } from "astro";
 import { z } from "zod/v3";
 
