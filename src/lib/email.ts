@@ -1,6 +1,5 @@
 import escapeHtml from "escape-html";
 import { Resend } from "resend";
-import { LOGO_BASE64 } from "./server/email-logo.generated";
 import { env } from "cloudflare:workers";
 
 const getResendApiKey = () => env?.RESEND_API_KEY || import.meta.env.RESEND_API_KEY;
@@ -46,7 +45,7 @@ function buildEmailWrapper(content: string): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Bloco Chora Bananeira</title>
+  <title>Instituto Maestro Abiud Almeida</title>
 </head>
 <body style="margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
@@ -60,9 +59,10 @@ function buildEmailWrapper(content: string): string {
           <!-- Header -->
           <tr>
             <td align="center"
-              style="background-color:${COLORS.primaryDark};background:linear-gradient(135deg,${COLORS.primaryDark} 0%,${COLORS.primary} 60%,#1a5c30 100%);padding:32px 24px 24px;">
-              <img src="${LOGO_BASE64}" width="120" height="120" alt="Bloco Chora Bananeira"
-                style="display:block;margin:0 auto;">
+              style="background-color:${COLORS.primaryDark};background:linear-gradient(135deg,${COLORS.primaryDark} 0%,${COLORS.primary} 60%,#1a5c30 100%);padding:32px 24px;">
+              <h1 style="margin:0;color:${COLORS.white};font-size:24px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">
+                Instituto Maestro Abiud Almeida
+              </h1>
             </td>
           </tr>
 
@@ -81,7 +81,7 @@ function buildEmailWrapper(content: string): string {
                 Este e-mail foi gerado automaticamente pelo formulário do site.
               </p>
               <p style="margin:0;font-size:11px;color:${COLORS.textMuted};">
-                © Bloco Chora Bananeira — Responda a este e-mail para entrar em contato com o remetente.
+                © Instituto Maestro Abiud Almeida — Responda a este e-mail para entrar em contato com o remetente.
               </p>
             </td>
           </tr>
