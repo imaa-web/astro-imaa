@@ -2,8 +2,9 @@
 import DocumentItem from "@/components/common/DocumentItem.astro";
 import TransparencyProjectStatusBadge from "@/components/features/transparency/TransparencyProjectStatusBadge";
 import type { ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT } from "@/lib/sanity.types";
+import type { Get } from "@sanity/codegen";
 
-type Project = NonNullable<NonNullable<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT>[number]["projects"]>[number];
+type Project = Get<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT, number, "projects", number>;
 
 interface Props {
   projects: Project[];

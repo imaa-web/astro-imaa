@@ -1,9 +1,10 @@
 ---
 import { Card } from "@/components/ui/card";
 import type { ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT } from "@/lib/sanity.types";
+import type { Get } from "@sanity/codegen";
 import { ArrowRight, FileText } from "@lucide/astro";
 
-type Section = NonNullable<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT>[number];
+type Section = Get<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT, number>;
 
 interface Props {
   section: Section;

@@ -1,8 +1,9 @@
 ---
 import DocumentItem from "@/components/common/DocumentItem.astro";
 import type { ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT } from "@/lib/sanity.types";
+import type { Get } from "@sanity/codegen";
 
-type Document = NonNullable<NonNullable<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT>[number]["documents"]>[number];
+type Document = Get<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT, number, "documents", number>;
 
 interface Props {
   documents: Document[];
