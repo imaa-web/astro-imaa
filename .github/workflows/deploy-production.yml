@@ -1,6 +1,16 @@
 name: Deploy production
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'astro.config.*'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/deploy-production.yml'
   repository_dispatch:
     types: [deploy-production]
   workflow_dispatch:
