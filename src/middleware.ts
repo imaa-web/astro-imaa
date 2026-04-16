@@ -1,60 +1,42 @@
+import { fetchSiteSettings } from "@/lib/data/fetch-site-settings";
 import { defineMiddleware } from "astro:middleware";
 
-const CDN_MAX_AGE = 31536000;
-const BROWSER_MAX_AGE = 3600;
-const STALE_WHILE_REVALIDATE = 86400;
-
-export const onRequest = defineMiddleware(async ({ request, locals }, next) => {
-  const url = new URL(request.url);
-
-  if (url.pathname.startsWith("/api/")) {
-    return next();
-  }
-
-  const cache = (caches as unknown as { default: Cache }).default;
-
-  // Remove query strings da cache key (UTM params etc)
-  const cacheUrl = new URL(request.url);
-  cacheUrl.search = "";
-  const cacheKey = new Request(cacheUrl.toString());
+export const onRequest = defineMiddleware(async ({ locals, request, rewrite }, next) => {
+  const pathname = new URL(request.url).pathname;
+  const isApiRoute = pathname.startsWith("/api/");
 
   try {
-    const cached = await cache.match(cacheKey);
-    if (cached) return cached;
-  } catch {
-    // Cache lookup failed, proceed to origin
+    locals.siteSettings = await fetchSiteSettings();
+  } catch (error) {
+    console.error("Failed to fetch site settings:", error instanceof Error ? error.message : "Unknown error");
+
+    locals.siteSettings = null;
+
+    // API routes return JSON errors, not HTML rewrites
+    if (isApiRoute) {
+      return new Response(JSON.stringify({ success: false, error: "Service temporarily unavailable" }), {
+        status: 503,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    if (pathname !== "/500" && pathname !== "/500/") {
+      return rewrite("/500");
+    }
+
+    return new Response("Service temporarily unavailable", { status: 503 });
   }
 
-  const originalResponse = await next();
+  const response = await next();
 
-  const contentType = originalResponse.headers.get("content-type") ?? "";
-  if (!contentType.includes("text/html") || originalResponse.status !== 200) {
-    return originalResponse;
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set("Permissions-Policy", "camera=(), microphone=()");
+
+  if (import.meta.env.PUBLIC_DEPLOY_MODE === "preview") {
+    response.headers.set("Cache-Control", "no-store");
   }
 
-  const newHeaders = new Headers(originalResponse.headers);
-  newHeaders.set(
-    "Cache-Control",
-    `public, max-age=${BROWSER_MAX_AGE}, s-maxage=${CDN_MAX_AGE}, stale-while-revalidate=${STALE_WHILE_REVALIDATE}`,
-  );
-  newHeaders.set("X-Content-Type-Options", "nosniff");
-  newHeaders.set("X-Frame-Options", "DENY");
-  newHeaders.set("Referrer-Policy", "strict-origin-when-cross-origin");
-
-  const responseToCache = new Response(originalResponse.body, {
-    status: originalResponse.status,
-    statusText: originalResponse.statusText,
-    headers: newHeaders,
-  });
-
-  const cfContext = (locals as Record<string, unknown>).cfContext as
-    | { waitUntil: (p: Promise<unknown>) => void }
-    | undefined;
-  cfContext?.waitUntil(
-    cache.put(cacheKey, responseToCache.clone()).catch(() => {
-      // Silently ignore cache write failures
-    }),
-  );
-
-  return responseToCache;
+  return response;
 });
