@@ -16,6 +16,18 @@ export interface SanityFormField {
   options?: FieldOption[] | null;
 }
 
+export interface ApiResponse {
+  success: boolean;
+  error?: string;
+}
+
+interface TurnstileResponse {
+  success: boolean;
+  "error-codes"?: string[];
+  challenge_ts?: string;
+  hostname?: string;
+}
+
 export async function verifyTurnstile(token: string): Promise<boolean> {
   try {
     const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
@@ -32,7 +44,7 @@ export async function verifyTurnstile(token: string): Promise<boolean> {
       return false;
     }
 
-    const data = await res.json();
+    const data: TurnstileResponse = await res.json();
     return data.success === true;
   } catch (error) {
     console.error("Turnstile verification error:", error);

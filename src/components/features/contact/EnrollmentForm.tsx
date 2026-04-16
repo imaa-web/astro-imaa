@@ -2,7 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
 import { SUBMIT_ERROR_MESSAGE } from "@/lib/constants";
-import { buildFormSchema, type SanityFormField } from "@/lib/utils/form-utils";
+import { buildFormSchema, type ApiResponse, type SanityFormField } from "@/lib/utils/form-utils";
 import { cn } from "@/lib/utils/ui-utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
@@ -88,7 +88,7 @@ export default function EnrollmentForm({ fields, isActive }: Readonly<Enrollment
         setSubmitError(SUBMIT_ERROR_MESSAGE);
         return;
       }
-      const data = await res.json();
+      const data: ApiResponse = await res.json();
 
       if (data.success) {
         setSuccess(true);

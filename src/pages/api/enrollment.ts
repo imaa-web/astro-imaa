@@ -1,7 +1,9 @@
+export const prerender = false;
+
 import { sendEnrollmentEmail } from "@/lib/email";
 import { verifyTurnstile } from "@/lib/utils/form-utils";
 import type { APIRoute } from "astro";
-import { z } from "zod";
+import { z } from "zod/v3";
 
 // Limites seguros
 const MAX_FIELDS = 30;
@@ -26,6 +28,11 @@ const fieldLabelsSchema = z
   });
 
 export const POST: APIRoute = async ({ request }) => {
+  const contentType = request.headers.get("content-type") ?? "";
+  if (!contentType.includes("multipart/form-data") && !contentType.includes("application/x-www-form-urlencoded")) {
+    return new Response(JSON.stringify({ success: false }), { status: 415 });
+  }
+
   try {
     const formData = await request.formData();
 
@@ -34,12 +41,27 @@ export const POST: APIRoute = async ({ request }) => {
       raw[key] = String(value);
     }
 
-    const parsedData = dynamicFormSchema.parse(raw);
+    const parsed = dynamicFormSchema.safeParse(raw);
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ success: false, error: "Dados inválidos enviados no formulário." }), {
+        status: 400,
+      });
+    }
+
+    const parsedData = parsed.data;
+
     if (parsedData._honey) {
       return new Response(JSON.stringify({ success: true }), { status: 200 });
     }
 
-    const isHuman = await verifyTurnstile(parsedData._turnstile ?? "");
+    const turnstileToken = parsedData._turnstile;
+    if (!turnstileToken) {
+      return new Response(JSON.stringify({ success: false, error: "Verificação de segurança ausente." }), {
+        status: 400,
+      });
+    }
+
+    const isHuman = await verifyTurnstile(turnstileToken);
     if (!isHuman) {
       return new Response(JSON.stringify({ success: false, error: "Verificação de segurança falhou." }), {
         status: 400,
@@ -50,7 +72,6 @@ export const POST: APIRoute = async ({ request }) => {
 
     let fieldLabels: Record<string, string> = {};
     try {
-      // Usando a variável trimada
       const trimmedLabels = _fieldLabels?.trim();
       if (trimmedLabels) {
         const parsedJson = JSON.parse(trimmedLabels);
@@ -64,11 +85,6 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (error) {
     console.error("Failed to process enrollment:", error);
-    if (error instanceof z.ZodError) {
-      return new Response(JSON.stringify({ success: false, error: "Dados inválidos enviados no formulário." }), {
-        status: 400,
-      });
-    }
     return new Response(JSON.stringify({ success: false }), { status: 500 });
   }
 };

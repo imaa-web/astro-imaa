@@ -1,3 +1,5 @@
+export const prerender = false;
+
 import { sendContactEmail } from "@/lib/email";
 import { verifyTurnstile } from "@/lib/utils/form-utils";
 import type { APIRoute } from "astro";
@@ -13,6 +15,11 @@ const ContactSchema = z.object({
 });
 
 export const POST: APIRoute = async ({ request }) => {
+  const contentType = request.headers.get("content-type") ?? "";
+  if (!contentType.includes("multipart/form-data") && !contentType.includes("application/x-www-form-urlencoded")) {
+    return new Response(JSON.stringify({ success: false }), { status: 415 });
+  }
+
   const formData = await request.formData();
   const raw = Object.fromEntries(formData);
 

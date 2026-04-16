@@ -4,6 +4,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { SUBMIT_ERROR_MESSAGE } from "@/lib/constants";
+import type { ApiResponse } from "@/lib/utils/form-utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
 import { Turnstile } from "@marsidev/react-turnstile";
@@ -69,7 +70,7 @@ export default function ContactForm({ isActive }: Readonly<ContactFormProps>) {
         setSubmitError(SUBMIT_ERROR_MESSAGE);
         return;
       }
-      const data = await res.json();
+      const data: ApiResponse = await res.json();
 
       if (data.success) {
         setSuccess(true);
