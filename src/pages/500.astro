@@ -1,0 +1,152 @@
+---
+import Container from "@/components/layout/Container.astro";
+import { buttonVariants } from "@/components/ui/button";
+import { House, ArrowLeft, TriangleAlert } from "@lucide/astro";
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Erro no servidor | Instituto Maestro Abiud</title>
+    <meta name="description" content="Ocorreu um erro inesperado no servidor. Tente novamente em alguns instantes." />
+    <meta name="robots" content="noindex, nofollow" />
+    <style>
+      :root {
+        --font-inter: "Inter", system-ui, sans-serif;
+        --font-merriweather: "Merriweather", Georgia, serif;
+      }
+
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-inter);
+        background-color: hsl(30, 25%, 96%);
+        color: hsl(30, 10%, 15%);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="relative flex items-center justify-center overflow-hidden min-h-dvh py-12 bg-muted">
+      <Container size="md">
+        <div class="relative z-10 flex flex-col items-center text-center gap-10">
+          <!-- 500 icon -->
+          <div class="flex items-center justify-center select-none animate-fade-up" aria-hidden="true">
+            <div class="error-icon-wrapper">
+              <TriangleAlert class="error-icon" stroke-width={1.5} />
+            </div>
+          </div>
+
+          <!-- content -->
+          <div class="animate-fade-up [animation-delay:200ms]">
+            <p class="heading-label-on-light mb-3">Erro 500</p>
+            <h1 class="heading-1 mb-4 text-balance">O ritmo parou por um instante</h1>
+            <div
+              class="h-1.5 w-20 rounded-sm bg-accent mx-auto mb-6 origin-center animate-scale-in [animation-delay:550ms]"
+            >
+            </div>
+            <p class="body-text text-pretty mb-10 mx-auto max-w-md text-center">
+              Algo inesperado aconteceu nos bastidores, mas já estamos trabalhando para voltar ao palco. Tente novamente
+              em alguns instantes.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+              <a href="/" class={buttonVariants({ size: "lg" })}>
+                <House class="w-4 h-4" aria-hidden="true" />
+                Voltar para o início
+              </a>
+              <button
+                type="button"
+                onclick="location.reload()"
+                class={buttonVariants({ variant: "outline", size: "lg" })}
+              >
+                <ArrowLeft class="w-4 h-4" aria-hidden="true" />
+                Tentar novamente
+              </button>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </div>
+  </body>
+</html>
+
+<style>
+  .error-icon-wrapper {
+    width: clamp(4rem, 12vw, 7rem);
+    height: clamp(4rem, 12vw, 7rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: hsl(0, 70%, 95%);
+    animation: pulse-ring 2s ease-in-out 0.6s infinite;
+  }
+
+  .error-icon {
+    width: 60%;
+    height: 60%;
+    color: hsl(0, 65%, 50%);
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes pulse-ring {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 hsla(0, 70%, 50%, 0.15);
+    }
+    50% {
+      box-shadow: 0 0 0 12px hsla(0, 70%, 50%, 0);
+    }
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.5s ease-out both;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.35s ease-out both;
+    transform: scaleX(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-up,
+    .animate-scale-in {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+
+    .error-icon-wrapper {
+      animation: none;
+    }
+  }
+</style>
