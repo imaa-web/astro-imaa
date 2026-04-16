@@ -1,4 +1,5 @@
 import { z } from "zod/v3";
+import { env } from "cloudflare:workers";
 
 interface FieldOption {
   _key: string;
@@ -34,7 +35,7 @@ export async function verifyTurnstile(token: string): Promise<boolean> {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        secret: import.meta.env.TURNSTILE_SECRET_KEY,
+        secret: env?.TURNSTILE_SECRET_KEY || import.meta.env.TURNSTILE_SECRET_KEY,
         response: token,
       }),
     });

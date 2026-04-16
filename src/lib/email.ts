@@ -1,10 +1,11 @@
 import escapeHtml from "escape-html";
 import { Resend } from "resend";
 import { LOGO_BASE64 } from "./server/email-logo.generated";
+import { env } from "cloudflare:workers";
 
-const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
-const FROM_EMAIL = import.meta.env.FROM_EMAIL;
-const TO_EMAIL = import.meta.env.TO_EMAIL;
+const getResendApiKey = () => env?.RESEND_API_KEY || import.meta.env.RESEND_API_KEY;
+const getFromEmail = () => env?.FROM_EMAIL || import.meta.env.FROM_EMAIL;
+const getToEmail = () => env?.TO_EMAIL || import.meta.env.TO_EMAIL;
 
 // ─── Paleta de cores da marca ─────────────────────────────────────────────────────
 const COLORS = {
@@ -20,10 +21,14 @@ const COLORS = {
 };
 
 function getResendClient(): Resend {
-  if (!RESEND_API_KEY || !FROM_EMAIL || !TO_EMAIL) {
+  const apiKey = getResendApiKey();
+  const fromEmail = getFromEmail();
+  const toEmail = getToEmail();
+
+  if (!apiKey || !fromEmail || !toEmail) {
     throw new Error("Missing required email configuration: RESEND_API_KEY, FROM_EMAIL, or TO_EMAIL");
   }
-  return new Resend(RESEND_API_KEY);
+  return new Resend(apiKey);
 }
 
 function formatValue(value: string): string {
@@ -149,8 +154,8 @@ export async function sendContactEmail(data: ContactEmailData) {
   `;
 
   return getResendClient().emails.send({
-    from: FROM_EMAIL,
-    to: TO_EMAIL,
+    from: getFromEmail(),
+    to: getToEmail(),
     replyTo: data.email,
     subject: `[Contato] ${data.subject} — ${data.name}`,
     html: buildEmailWrapper(content),
@@ -182,8 +187,8 @@ export async function sendEnrollmentEmail({ fields, fieldLabels }: EnrollmentEma
   const replyTo = rawEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rawEmail) ? rawEmail : undefined;
 
   return getResendClient().emails.send({
-    from: FROM_EMAIL,
-    to: TO_EMAIL,
+    from: getFromEmail(),
+    to: getToEmail(),
     ...(replyTo ? { replyTo } : {}),
     subject: `[Pré-inscrição] Nova solicitação de inscrição nas oficinas`,
     html: buildEmailWrapper(content),
