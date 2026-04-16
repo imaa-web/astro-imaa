@@ -3,7 +3,6 @@ import Head from "@/components/common/Head.astro";
 import Footer from "@/components/layout/footer/Footer.astro";
 import Header from "@/components/layout/Header.astro";
 import BackToTopButton from "@/components/ui/BackToTopButton.astro";
-import { fetchSiteSettings } from "@/lib/fetch-site-settings";
 import type { SanityImageBase } from "@/lib/sanity-derived-types";
 import "@/styles/global.css";
 import { Font } from "astro:assets";
@@ -14,24 +13,30 @@ interface Props {
   description: string;
   canonical?: string;
   image?: SanityImageBase | null;
+  noIndex?: boolean;
 }
 
-let siteSettings;
-try {
-  siteSettings = await fetchSiteSettings();
-} catch (error) {
-  console.error("Failed to fetch site settings:", error);
-  return new Response("Service temporarily unavailable", { status: 503 });
+const { siteSettings } = Astro.locals;
+
+if (!siteSettings) {
+  return new Response("Site settings unavailable", { status: 503 });
 }
 
-const { title, description, canonical, image } = Astro.props;
+const { title, description, canonical, image, noIndex } = Astro.props;
+const isPreview = import.meta.env.PUBLIC_DEPLOY_MODE === "preview";
 ---
 
 <!doctype html>
 <html lang="pt-BR">
   <head>
-    <Head title={title} description={description} canonical={canonical} image={image} siteSettings={siteSettings} />
-    <link rel="sitemap" href="/sitemap.xml" />
+    <Head
+      title={title}
+      description={description}
+      canonical={canonical}
+      image={image}
+      siteSettings={siteSettings}
+      noIndex={isPreview || noIndex}
+    />
     <ClientRouter />
     <Font cssVariable="--font-inter" />
     <Font cssVariable="--font-merriweather" />
@@ -39,7 +44,7 @@ const { title, description, canonical, image } = Astro.props;
   </head>
   <body>
     <Header siteSettings={siteSettings} />
-    <main><slot /></main>
+    <main id="main-content"><slot /></main>
     <Footer siteSettings={siteSettings} />
     <BackToTopButton />
   </body>

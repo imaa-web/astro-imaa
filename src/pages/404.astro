@@ -3,7 +3,6 @@ import BananeiraIcon from "@/components/icons/BananeiraIcon";
 import Container from "@/components/layout/Container.astro";
 import Layout from "@/layouts/Layout.astro";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils/ui-utils";
 import { House, ArrowLeft } from "@lucide/astro";
 ---
 
@@ -36,14 +35,14 @@ import { House, ArrowLeft } from "@lucide/astro";
           </p>
 
           <div class="flex flex-col sm:flex-row gap-3 justify-center">
-            <a href="/" class={cn(buttonVariants({ size: "lg" }))}>
+            <a href="/" class={buttonVariants({ size: "lg" })}>
               <House class="w-4 h-4" aria-hidden="true" />
               Voltar para o início
             </a>
             <button
               type="button"
               onclick="history.back()"
-              class={cn(buttonVariants({ variant: "outline", size: "lg" }))}
+              class={buttonVariants({ variant: "outline", size: "lg" })}
             >
               <ArrowLeft class="w-4 h-4" aria-hidden="true" />
               Página anterior

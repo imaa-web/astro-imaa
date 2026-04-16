@@ -6,27 +6,45 @@ import UnderConstruction from "@/components/sections/UnderConstruction.astro";
 import Layout from "@/layouts/Layout.astro";
 import { DEFAULT_TITLE } from "@/lib/constants";
 import { loadQuery } from "@/lib/load-query";
-import { PAGE_BY_SLUG_QUERY } from "@/lib/queries/page";
-import type { ALL_PAGES_QUERY_RESULT } from "@/lib/sanity.types";
+import { ALL_PAGES_QUERY, PAGE_BY_SLUG_QUERY } from "@/lib/queries/page";
+import type { ALL_PAGES_QUERY_RESULT, PAGE_BY_SLUG_QUERY_RESULT } from "@/lib/sanity.types";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 
-type PageBySlugResult = ALL_PAGES_QUERY_RESULT[number] | null;
+export const getStaticPaths = (async () => {
+  const { data: pages } = await loadQuery<ALL_PAGES_QUERY_RESULT>({
+    query: ALL_PAGES_QUERY,
+  });
+
+  return (pages ?? [])
+    .filter((page): page is ALL_PAGES_QUERY_RESULT[number] & { slug: string } => Boolean(page?.slug))
+    .map((page) => ({
+      params: { slug: page.slug },
+      props: { page },
+    }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { slug } = Astro.params;
+const staticPage = (Astro.props as Partial<Props>).page ?? null;
 
 if (!slug) return Astro.rewrite("/404");
 
-const { data: page } = await loadQuery<PageBySlugResult>({
-  query: PAGE_BY_SLUG_QUERY,
-  params: { slug },
-});
+// SSR fallback: se não veio de getStaticPaths, busca direto
+const page =
+  staticPage ??
+  (await loadQuery<PAGE_BY_SLUG_QUERY_RESULT>({ query: PAGE_BY_SLUG_QUERY, params: { slug } })).data;
 
 if (!page) return Astro.rewrite("/404");
+
+const UNDER_CONSTRUCTION = new Set(["projetos", "galeria"]);
+const isUnderConstruction = UNDER_CONSTRUCTION.has(slug);
 ---
 
 <Layout title={page.title ?? DEFAULT_TITLE} description={page.excerpt ?? ""} image={page.featuredImage}>
   <PageHero heading={page.hero?.heading ?? page.title ?? DEFAULT_TITLE} tagline={page.hero?.tagline} />
   {
-    slug.includes("projetos") || slug.includes("galeria") ? (
+    isUnderConstruction ? (
       <UnderConstruction />
     ) : (
       <>

@@ -4,7 +4,7 @@ import MissionSection from "@/components/features/home/MissionSection.astro";
 import ProjectsPreviewSection from "@/components/features/home/ProjectsPreviewSection.astro";
 import SocialSection from "@/components/features/home/SocialSection.astro";
 import Layout from "@/layouts/Layout.astro";
-import { fetchSiteSettings } from "@/lib/fetch-site-settings";
+import { fetchSiteSettings } from "@/lib/data/fetch-site-settings";
 import { loadQuery } from "@/lib/load-query";
 import { HOME_PAGE_QUERY } from "@/lib/queries/home";
 import type { QuerySocialLinkWithImage } from "@/lib/sanity-derived-types";
@@ -41,11 +41,14 @@ const socialLinks: QuerySocialLinkWithImage[] = (siteSettings?.socialLinks ?? []
 <script>
   import confetti from "canvas-confetti";
 
-  confetti({
-    particleCount: 150,
-    spread: 160,
-    origin: { y: 0 },
-    gravity: 0.5,
-    ticks: 400,
-  });
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!prefersReducedMotion) {
+    confetti({
+      particleCount: 150,
+      spread: 160,
+      origin: { y: 0 },
+      gravity: 0.5,
+      ticks: 400,
+    });
+  }
 </script>
