@@ -36,7 +36,7 @@ const { heading, subtitle, items } = node;
       {subtitle && <p class="text-base leading-relaxed mb-5">{subtitle}</p>}
 
       <div
-        class="not-prose border border-border rounded-xl overflow-hidden"
+        class="not-prose border border-border rounded-xl overflow-hidden space-y-4 sm:space-y-0"
         role="table"
         aria-label={heading || "Vitrine de Projetos"}
       >
@@ -61,11 +61,16 @@ const { heading, subtitle, items } = node;
               class="flex flex-col sm:flex-row border-t border-border bg-card transition-colors hover:bg-muted"
               role="row"
             >
-              <div class="sm:w-70 sm:shrink-0 px-5 py-4 flex items-center border-b sm:border-b-0" role="cell">
-                <strong class="text-foreground">{item.name}</strong>
+              <div
+                class="sm:w-70 sm:shrink-0 px-5 py-3 sm:py-4 flex items-center bg-primary sm:bg-transparent border-b sm:border-b-0"
+                role="cell"
+              >
+                <strong class="text-primary-foreground sm:text-foreground text-sm sm:text-base uppercase sm:normal-case tracking-wide sm:tracking-normal text-pretty">
+                  {item.name}
+                </strong>
               </div>
               <div
-                class="flex-1 px-5 py-4 sm:border-l border-border text-muted-foreground text-sm leading-relaxed"
+                class="flex-1 px-5 py-4 sm:border-l border-border text-muted-foreground text-sm leading-relaxed text-pretty"
                 role="cell"
               >
                 {item.description}
