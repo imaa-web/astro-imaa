@@ -138,28 +138,23 @@ export default function HeroSection({
           {/* Logo */}
           <motion.div
             className="order-1 lg:order-2 flex items-center justify-center"
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.9, ease: "easeOut", delay: 0.15 }}
           >
             <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 xl:w-md xl:h-112">
               <div className="absolute inset-8 rounded-full blur-2xl opacity-50 bg-secondary" />
               <div className="absolute inset-16 rounded-full blur-3xl opacity-40 bg-accent" />
               {logo && (
-                <motion.div
-                  className="absolute inset-0"
-                  animate={{ rotate: [0, -1.5, 1.5, -1, 1, 0] }}
-                  transition={{ duration: 3, ease: "easeInOut" }}
-                >
-                  <SanityImage
-                    image={logo}
-                    width={400}
-                    height={400}
-                    className="w-full h-full object-contain"
-                    alt={logo.alt ?? CARNIVAL_BLOCK_NAME}
-                  />
-                </motion.div>
+                <SanityImage
+                  image={logo}
+                  width={400}
+                  height={400}
+                  className="relative z-10 w-full h-full object-contain"
+                  alt={logo.alt ?? CARNIVAL_BLOCK_NAME}
+                />
               )}
+              <div className="absolute inset-12 z-20 rounded-full blur-3xl opacity-15 bg-secondary pointer-events-none" />
             </div>
           </motion.div>
         </div>
