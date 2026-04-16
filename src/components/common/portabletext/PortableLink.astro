@@ -1,5 +1,6 @@
 ---
 import { resolveSafeHref } from "@/lib/utils/link-utils";
+import { ExternalLink } from "@lucide/astro";
 
 interface MarkDef {
   href?: string;
@@ -31,9 +32,11 @@ const shouldOpenInNewTab = markDef?.blank !== undefined ? markDef.blank : isExte
       href={safeHref}
       target={shouldOpenInNewTab ? "_blank" : undefined}
       rel={shouldOpenInNewTab || isExternal ? "noopener noreferrer" : undefined}
-      class="font-medium text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-all"
+      class="font-semibold text-primary underline decoration-2 decoration-primary/50 underline-offset-2 hover:decoration-primary hover:bg-primary/10 px-2 py-1 rounded-sm transition-colors"
     >
       <slot />
+      {isExternal && <ExternalLink class="inline w-3.5 h-3.5 ml-0.5 -translate-y-px" aria-hidden="true" />}
+      {shouldOpenInNewTab && <span class="sr-only">(abre em nova aba)</span>}
     </a>
   ) : (
     <span class="text-red-500 line-through cursor-not-allowed" title="Link inseguro bloqueado">
