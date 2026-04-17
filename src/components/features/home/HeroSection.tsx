@@ -1,8 +1,7 @@
-import streamers from "@/assets/streamers-colorful.png";
 import SanityImage from "@/components/common/SanityImage";
 import BlockHighlightSection from "@/components/features/home/BlockHighlightSection";
 import { Button } from "@/components/ui/button";
-import { CARNIVAL_BLOCK_NAME, DEFAULT_DESCRIPTION, INSTITUTE_NAME } from "@/lib/constants";
+import { DEFAULT_DESCRIPTION, INSTITUTE_NAME, MAESTRO_NAME } from "@/lib/constants";
 import type { HomeBlockHighlightSection, HomePageCta, SanityImageBase } from "@/lib/sanity-derived-types";
 import { resolveCta } from "@/lib/utils/link-utils";
 import { ArrowRight, ChevronDown, ExternalLink } from "lucide-react";
@@ -86,21 +85,14 @@ export default function HeroSection({
   blockHighlight,
 }: Readonly<HeroSectionProps>) {
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(to_bottom,rgba(27,122,59,1)_0%,rgba(0,86,28,1)_18%,rgba(5,33,14,1)_60%,rgba(5,33,14,1)_78%)]">
-      <img
-        src={streamers.src}
-        alt=""
-        aria-hidden="true"
-        className="absolute top-0 left-0 z-0 w-full h-auto pointer-events-none sm:blur-[1px] brightness-125"
-      />
-
+    <section className="relative overflow-hidden bg-[linear-gradient(to_bottom,rgba(20,46,96,1)_0%,rgba(18,44,90,1)_18%,rgba(8,18,42,1)_60%,rgba(8,18,42,1)_78%)]">
       {/* ── Hero ── */}
-      <div className="relative z-10 container mx-auto px-6 md:px-10 lg:px-16 lg:max-w-6xl pt-16 lg:min-h-[calc(100vh-5rem)] flex items-center">
+      <div className="relative z-10 container mx-auto px-6 md:px-10 lg:px-16 lg:max-w-6xl pt-16 lg:pt-0 lg:min-h-[calc(100vh-5rem)] flex items-center">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center w-full">
           {/* Texto */}
           <motion.div variants={containerVariants} initial="hidden" animate="visible" className="order-2 lg:order-1">
             <motion.h1 variants={itemVariants} className="mb-6 leading-tight">
-              <span className="block uppercase text-lg md:text-3xl font-sans font-semibold mb-3 max-w-48 md:max-w-80">
+              <span className="block whitespace-nowrap uppercase text-xl md:text-4xl font-sans font-semibold mb-3">
                 <BlurRevealText
                   text={INSTITUTE_NAME}
                   className="bg-secondary bg-clip-text text-transparent"
@@ -109,7 +101,7 @@ export default function HeroSection({
               </span>
               <span className="block font-serif text-5xl md:text-6xl">
                 <BlurRevealText
-                  text={CARNIVAL_BLOCK_NAME}
+                  text={MAESTRO_NAME}
                   delay={0.2}
                   className="bg-primary-foreground bg-clip-text text-transparent"
                 />
@@ -151,7 +143,7 @@ export default function HeroSection({
                   width={400}
                   height={400}
                   className="relative z-10 w-full h-full object-contain"
-                  alt={logo.alt ?? CARNIVAL_BLOCK_NAME}
+                  alt={logo.alt ?? MAESTRO_NAME}
                 />
               )}
               <div className="absolute inset-12 z-20 rounded-full blur-3xl opacity-15 bg-secondary pointer-events-none" />
