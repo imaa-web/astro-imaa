@@ -5,7 +5,7 @@ import MobileAccordionItem from "@/components/layout/navigation/MobileAccordionI
 import MobileNavLink from "@/components/layout/navigation/MobileNavLink";
 import NavLink from "@/components/layout/navigation/NavLink";
 import { Accordion } from "@/components/ui/accordion";
-import { CARNIVAL_BLOCK_NAME, INSTITUTE_NAME } from "@/lib/constants";
+import { INSTITUTE_NAME, MAESTRO_NAME } from "@/lib/constants";
 import type { QueryMenuItem, QuerySocialLink, SanityImageBase } from "@/lib/sanity-derived-types";
 import { isActiveLink } from "@/lib/utils/navbar-utils";
 import { buildUrlFromSlug } from "@/lib/utils/string-utils";
@@ -48,8 +48,8 @@ export default function Navbar({ currentPath, menuItems, socialLinks, logo }: Re
               />
             )}
             <div>
-              <p className="text-[10px] font-semibold text-accent uppercase font-sans">{INSTITUTE_NAME}</p>
-              <p className="text-[17px] font-bold text-primary font-serif">{CARNIVAL_BLOCK_NAME}</p>
+              <p className="text-[11px] font-semibold text-accent uppercase font-sans tracking-wide">{INSTITUTE_NAME}</p>
+              <p className="text-[17px] font-bold text-primary font-serif">{MAESTRO_NAME}</p>
             </div>
           </a>
 
