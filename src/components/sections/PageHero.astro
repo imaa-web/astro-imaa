@@ -1,5 +1,4 @@
 ---
-import BananeiraIcon from "@/components/icons/BananeiraIcon";
 import Container from "@/components/layout/Container.astro";
 import PageSection from "@/components/layout/PageSection.astro";
 import { cn } from "@/lib/utils/ui-utils";
@@ -19,15 +18,7 @@ const { heading, tagline, containerSize = "md", class: className } = Astro.props
     <div>
       <div>
         <h1 class="heading-1 mb-3">
-          {heading.split(" ").slice(0, -1).join(" ")}{" "}
-          <span class="whitespace-nowrap">
-            {heading.split(" ").at(-1)}<span
-              class="bananeira-icon inline-block mb-2 align-bottom ml-2"
-              aria-hidden="true"
-            >
-              <BananeiraIcon className="h-6 md:h-8 w-auto" />
-            </span>
-          </span>
+          {heading}
         </h1>
       </div>
       {tagline && <p class="body-text max-w-2xl text-pretty mb-3">{tagline}</p>}
@@ -46,39 +37,14 @@ const { heading, tagline, containerSize = "md", class: className } = Astro.props
     }
   }
 
-  @keyframes sway {
-    0% {
-      transform: rotate(0deg);
-    }
-    20% {
-      transform: rotate(-2deg);
-    }
-    50% {
-      transform: rotate(2.5deg);
-    }
-    75% {
-      transform: rotate(-1.5deg);
-    }
-    100% {
-      transform: rotate(0deg);
-    }
-  }
-
   .animate-accent-bar {
     animation: accent-bar 0.3s ease-out forwards;
     animation-delay: 0.1s;
     transform: scaleX(0);
   }
 
-  .bananeira-icon {
-    transform-origin: center bottom;
-    animation: sway 1.2s ease-in-out forwards;
-    animation-delay: 0.3s;
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .animate-accent-bar,
-    .bananeira-icon {
+    .animate-accent-bar {
       animation: none;
       transform: none;
     }
