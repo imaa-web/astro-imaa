@@ -88,18 +88,23 @@ export default function HeroSection({
     <section className="relative overflow-hidden bg-[linear-gradient(to_bottom,rgba(20,46,96,1)_0%,rgba(18,44,90,1)_18%,rgba(8,18,42,1)_60%,rgba(8,18,42,1)_78%)]">
       {/* ── Hero ── */}
       <div className="relative z-10 container mx-auto px-6 md:px-10 lg:px-16 lg:max-w-6xl pt-16 lg:pt-0 lg:min-h-[calc(100vh-5rem)] flex items-center">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center w-full">
-          {/* Texto */}
-          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="order-2 lg:order-1">
-            <motion.h1 variants={itemVariants} className="mb-6 leading-tight">
-              <span className="block whitespace-nowrap uppercase text-xl md:text-4xl font-sans font-semibold mb-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center w-full">
+          {/* Texto: abaixo de lg, centralizado com o logo; em lg+, alinhado à esquerda como antes */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="order-2 lg:order-1 flex w-full flex-col items-center text-center lg:items-stretch lg:text-left"
+          >
+            <motion.h1 variants={itemVariants} className="mb-6 w-full max-w-md leading-tight md:max-w-xl lg:max-w-none">
+              <span className="mb-3 block whitespace-nowrap uppercase font-sans font-semibold tracking-wide text-[clamp(1.125rem,5.5vw,2.875rem)] md:text-4xl lg:text-5xl">
                 <BlurRevealText
                   text={INSTITUTE_NAME}
                   className="bg-secondary bg-clip-text text-transparent"
                   delay={0.1}
                 />
               </span>
-              <span className="block font-serif text-5xl md:text-6xl">
+              <span className="block font-serif whitespace-nowrap text-[clamp(1.875rem,10.5vw,3.75rem)] md:text-6xl">
                 <BlurRevealText
                   text={MAESTRO_NAME}
                   delay={0.2}
@@ -108,16 +113,19 @@ export default function HeroSection({
               </span>
             </motion.h1>
 
-            <motion.div variants={itemVariants} className="h-px w-32 mb-6 gradient-colors" />
+            <motion.div variants={itemVariants} className="mx-auto mb-6 h-px w-32 gradient-colors lg:mx-0" />
 
             <motion.p
               variants={itemVariants}
-              className="text-base md:text-lg text-white/70 mb-10 leading-relaxed font-sans max-w-md"
+              className="mb-10 max-w-md text-base leading-relaxed font-sans text-white/70 md:text-lg lg:mx-0 text-pretty"
             >
               {description ?? DEFAULT_DESCRIPTION}
             </motion.p>
 
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
+            <motion.div
+              variants={itemVariants}
+              className="flex w-full max-w-md flex-col gap-4 sm:flex-row sm:justify-center lg:max-w-none lg:justify-start"
+            >
               <CtaButton cta={primaryCta} className="bg-accent hover:bg-accent/90 text-white" />
               <CtaButton
                 cta={secondaryCta}
