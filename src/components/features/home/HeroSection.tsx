@@ -97,7 +97,7 @@ export default function HeroSection({
             className="order-2 lg:order-1 flex w-full flex-col items-center text-center lg:items-stretch lg:text-left"
           >
             <motion.h1 variants={itemVariants} className="mb-6 w-full max-w-md leading-tight md:max-w-xl lg:max-w-none">
-              <span className="mb-3 block whitespace-nowrap uppercase font-sans font-semibold tracking-wide text-[clamp(1.125rem,5.5vw,2.875rem)] md:text-4xl lg:text-5xl">
+              <span className="mb-3 block whitespace-nowrap uppercase font-sans font-semibold tracking-wide text-[clamp(1.125rem,5.5vw,2.875rem)] md:text-4xl">
                 <BlurRevealText
                   text={INSTITUTE_NAME}
                   className="bg-secondary bg-clip-text text-transparent"
