@@ -25,6 +25,7 @@ const posterUrl = node.posterImage
     <figure class="my-8 not-prose">
       <div class="aspect-video rounded-xl overflow-hidden shadow-md bg-zinc-900">
         <video
+          src={videoUrl}
           poster={posterUrl}
           controls
           preload="metadata"
@@ -32,7 +33,6 @@ const posterUrl = node.posterImage
           class="w-full h-full object-contain"
           aria-label={node.caption || "Vídeo"}
         >
-          <source src={videoUrl} type={node.file?.mimeType} />
           Seu navegador não suporta a tag de vídeo.
         </video>
       </div>
