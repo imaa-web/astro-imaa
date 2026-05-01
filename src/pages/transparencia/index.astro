@@ -8,16 +8,20 @@ import { buttonVariants } from "@/components/ui/button";
 import Layout from "@/layouts/Layout.astro";
 import { loadQuery } from "@/lib/load-query";
 import { ALL_TRANSPARENCY_SECTIONS_QUERY, TRANSPARENCY_INDEX_PAGE_QUERY } from "@/lib/queries/transparency";
-import type { ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT, TRANSPARENCY_INDEX_PAGE_QUERY_RESULT } from "@/lib/sanity.types";
+import type {
+  TransparencyIndexPageQuery,
+  TransparencySection,
+  TransparencySectionsQuery,
+} from "@/lib/sanity-derived-types";
 import { cn } from "@/lib/utils/ui-utils";
 import { ExternalLink } from "@lucide/astro";
 
 const [{ data: page }, { data: sections }] = await Promise.all([
-  loadQuery<TRANSPARENCY_INDEX_PAGE_QUERY_RESULT>({ query: TRANSPARENCY_INDEX_PAGE_QUERY }),
-  loadQuery<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT>({ query: ALL_TRANSPARENCY_SECTIONS_QUERY }),
+  loadQuery<TransparencyIndexPageQuery>({ query: TRANSPARENCY_INDEX_PAGE_QUERY }),
+  loadQuery<TransparencySectionsQuery>({ query: ALL_TRANSPARENCY_SECTIONS_QUERY }),
 ]);
 
-const validSections = (sections ?? []).filter((s) => s.slug);
+const validSections = (sections ?? []).filter((s): s is TransparencySection & { slug: string } => Boolean(s?.slug));
 ---
 
 <Layout title={page?.title ?? "Portal da Transparência"} description={page?.excerpt ?? ""} image={page?.featuredImage}>

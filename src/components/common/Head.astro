@@ -1,19 +1,18 @@
 ---
 import { DEFAULT_TITLE } from "@/lib/constants";
 import { urlFor } from "@/lib/sanity-client";
-import type { SanityImageBase } from "@/lib/sanity-derived-types";
-import type { SITE_SETTINGS_QUERY_RESULT } from "@/lib/sanity.types";
+import type { SanityImageBase, SeoSettings } from "@/lib/sanity-derived-types";
 
 interface Props {
   title: string;
   description: string;
   canonical?: string;
   image?: SanityImageBase | null;
-  siteSettings: SITE_SETTINGS_QUERY_RESULT;
+  seoSettings: SeoSettings;
   noIndex?: boolean;
 }
 
-const { title, description, canonical, image, siteSettings, noIndex = false } = Astro.props;
+const { title, description, canonical, image, seoSettings, noIndex = false } = Astro.props;
 
 const canonicalURL =
   canonical ||
@@ -23,12 +22,12 @@ const canonicalURL =
 const isHomePage = Astro.url.pathname === "/";
 
 const finalTitle = isHomePage ? `${DEFAULT_TITLE} | ${title}` : `${title} | ${DEFAULT_TITLE}`;
-const finalDescription = description || siteSettings?.defaultSeoDescription || "";
+const finalDescription = description || seoSettings.defaultSeoDescription || "";
 
 const ogImage = image?.asset
   ? urlFor(image).width(1200).height(630).fit("crop").auto("format").url()
-  : siteSettings?.logo?.asset
-    ? urlFor(siteSettings.logo).width(1200).height(630).fit("crop").auto("format").url()
+  : seoSettings.logo?.asset
+    ? urlFor(seoSettings.logo).width(1200).height(630).fit("crop").auto("format").url()
     : null;
 ---
 

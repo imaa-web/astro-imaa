@@ -1,13 +1,10 @@
 ---
 import { Card } from "@/components/ui/card";
-import type { ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT } from "@/lib/sanity.types";
-import type { Get } from "@sanity/codegen";
+import type { TransparencySection } from "@/lib/sanity-derived-types";
 import { ArrowRight, FileText } from "@lucide/astro";
 
-type Section = Get<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT, number>;
-
 interface Props {
-  section: Section;
+  section: TransparencySection;
 }
 
 const { section } = Astro.props;

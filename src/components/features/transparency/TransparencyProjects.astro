@@ -1,13 +1,10 @@
 ---
 import DocumentItem from "@/components/common/DocumentItem.astro";
 import TransparencyProjectStatusBadge from "@/components/features/transparency/TransparencyProjectStatusBadge";
-import type { ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT } from "@/lib/sanity.types";
-import type { Get } from "@sanity/codegen";
-
-type Project = Get<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT, number, "projects", number>;
+import type { TransparencyProject } from "@/lib/sanity-derived-types";
 
 interface Props {
-  projects: Project[];
+  projects: TransparencyProject[];
 }
 
 const { projects } = Astro.props;

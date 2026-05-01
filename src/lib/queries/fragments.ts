@@ -1,14 +1,15 @@
 export const IMAGE_FRAGMENT = `
+  _key,
   hotspot,
-  crop,  
-  alt,    
-  caption, 
+  crop,
+  alt,
+  caption,
   asset-> {
     _id,
-    url, 
+    url,
     altText,
     metadata {
-      lqip, 
+      lqip,
       dimensions {
         width,
         height,
@@ -44,11 +45,11 @@ export const MENU_ITEM_FRAGMENT = `
     pageReference->slug.current
   ),
   "isDropdown": count(submenu) > 0,
-  submenu[] {
+  "submenu": coalesce(submenu[] {
     _key,
     "label": coalesce(label, pageReference->title),
     "slug": ${PAGE_REFERENCE_SLUG},
-  }
+  }, []),
 `;
 
 const VIDEO_FILE_FRAGMENT = `

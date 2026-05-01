@@ -3,7 +3,7 @@ import Head from "@/components/common/Head.astro";
 import Footer from "@/components/layout/footer/Footer.astro";
 import Header from "@/components/layout/Header.astro";
 import BackToTopButton from "@/components/ui/BackToTopButton.astro";
-import type { SanityImageBase } from "@/lib/sanity-derived-types";
+import type { SanityImageBase, SeoSettings } from "@/lib/sanity-derived-types";
 import "@/styles/global.css";
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
@@ -24,6 +24,10 @@ if (!siteSettings) {
 
 const { title, description, canonical, image, noIndex } = Astro.props;
 const isPreview = import.meta.env.PUBLIC_DEPLOY_MODE === "preview";
+const seoSettings: SeoSettings = {
+  defaultSeoDescription: siteSettings.defaultSeoDescription,
+  logo: siteSettings.logo,
+};
 ---
 
 <!doctype html>
@@ -34,7 +38,7 @@ const isPreview = import.meta.env.PUBLIC_DEPLOY_MODE === "preview";
       description={description}
       canonical={canonical}
       image={image}
-      siteSettings={siteSettings}
+      seoSettings={seoSettings}
       noIndex={isPreview || noIndex}
     />
     <ClientRouter />
@@ -43,9 +47,21 @@ const isPreview = import.meta.env.PUBLIC_DEPLOY_MODE === "preview";
     <Font cssVariable="--font-work-sans" />
   </head>
   <body>
-    <Header siteSettings={siteSettings} />
+    <Header
+      logo={siteSettings.logo}
+      menuItems={siteSettings.mainMenu?.items ?? []}
+      socialLinks={siteSettings.socialLinks ?? []}
+    />
     <main id="main-content"><slot /></main>
-    <Footer siteSettings={siteSettings} />
+    <Footer
+      siteTitle={siteSettings.title}
+      menuLabel={siteSettings.footerMenu?.label ?? null}
+      menuItems={siteSettings.footerMenu?.items ?? []}
+      description={siteSettings.defaultSeoDescription}
+      socialLinks={siteSettings.socialLinks ?? []}
+      contactInfo={siteSettings.contactInfo ?? null}
+      logo={siteSettings.logo}
+    />
     <BackToTopButton />
   </body>
 </html>

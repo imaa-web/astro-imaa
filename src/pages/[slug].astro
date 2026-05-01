@@ -7,16 +7,16 @@ import Layout from "@/layouts/Layout.astro";
 import { DEFAULT_TITLE } from "@/lib/constants";
 import { loadQuery } from "@/lib/load-query";
 import { ALL_PAGES_QUERY, PAGE_BY_SLUG_QUERY } from "@/lib/queries/page";
-import type { ALL_PAGES_QUERY_RESULT, PAGE_BY_SLUG_QUERY_RESULT } from "@/lib/sanity.types";
+import type { AllPagesQuery, PageBySlugQuery } from "@/lib/sanity-derived-types";
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 
 export const getStaticPaths = (async () => {
-  const { data: pages } = await loadQuery<ALL_PAGES_QUERY_RESULT>({
+  const { data: pages } = await loadQuery<AllPagesQuery>({
     query: ALL_PAGES_QUERY,
   });
 
   return (pages ?? [])
-    .filter((page): page is ALL_PAGES_QUERY_RESULT[number] & { slug: string } => Boolean(page?.slug))
+    .filter((page): page is AllPagesQuery[number] & { slug: string } => Boolean(page?.slug))
     .map((page) => ({
       params: { slug: page.slug },
       props: { page },
@@ -32,7 +32,7 @@ if (!slug) return Astro.rewrite("/404");
 
 // SSR fallback: se não veio de getStaticPaths, busca direto
 const page =
-  staticPage ?? (await loadQuery<PAGE_BY_SLUG_QUERY_RESULT>({ query: PAGE_BY_SLUG_QUERY, params: { slug } })).data;
+  staticPage ?? (await loadQuery<PageBySlugQuery>({ query: PAGE_BY_SLUG_QUERY, params: { slug } })).data;
 
 if (!page) return Astro.rewrite("/404");
 

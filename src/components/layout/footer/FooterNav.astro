@@ -1,10 +1,9 @@
 ---
-import type { QueryMenuItem } from "@/lib/sanity-derived-types";
-import { buildUrlFromSlug } from "@/lib/utils/string-utils";
+import type { FlatMenuItem } from "@/lib/utils/link-utils";
 
 interface Props {
   label: string;
-  items: QueryMenuItem[];
+  items: FlatMenuItem[];
 }
 
 const { label, items } = Astro.props;
@@ -17,7 +16,7 @@ const { label, items } = Astro.props;
       items.map((link) => (
         <li>
           <a
-            href={buildUrlFromSlug(link.slug)}
+            href={link.href}
             class="caption-text-primary-foreground hover:text-secondary transition-colors"
           >
             {link.label}

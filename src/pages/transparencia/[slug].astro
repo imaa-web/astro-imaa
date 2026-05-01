@@ -10,20 +10,21 @@ import Layout from "@/layouts/Layout.astro";
 import { loadQuery } from "@/lib/load-query";
 import { ALL_TRANSPARENCY_SECTIONS_QUERY, TRANSPARENCY_SECTION_BY_SLUG_QUERY } from "@/lib/queries/transparency";
 import type {
-  ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT,
-  TRANSPARENCY_SECTION_BY_SLUG_QUERY_RESULT,
-} from "@/lib/sanity.types";
+  TransparencySection,
+  TransparencySectionBySlugQuery,
+  TransparencySectionsQuery,
+} from "@/lib/sanity-derived-types";
 import { cn } from "@/lib/utils/ui-utils";
 import { FileText } from "@lucide/astro";
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 
 export const getStaticPaths = (async () => {
-  const { data: sections } = await loadQuery<ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT>({
+  const { data: sections } = await loadQuery<TransparencySectionsQuery>({
     query: ALL_TRANSPARENCY_SECTIONS_QUERY,
   });
 
   return (sections ?? [])
-    .filter((s): s is ALL_TRANSPARENCY_SECTIONS_QUERY_RESULT[number] & { slug: string } => Boolean(s?.slug))
+    .filter((s): s is TransparencySection & { slug: string } => Boolean(s?.slug))
     .map((section) => ({
       params: { slug: section.slug },
       props: { section },
@@ -41,7 +42,7 @@ if (!slug) return Astro.rewrite("/404");
 const section =
   staticSection ??
   (
-    await loadQuery<TRANSPARENCY_SECTION_BY_SLUG_QUERY_RESULT>({
+    await loadQuery<TransparencySectionBySlugQuery>({
       query: TRANSPARENCY_SECTION_BY_SLUG_QUERY,
       params: { slug },
     })
