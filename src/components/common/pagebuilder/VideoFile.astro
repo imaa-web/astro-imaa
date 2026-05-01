@@ -28,7 +28,9 @@ const posterUrl = posterImage?.asset
           preload={autoplay ? "auto" : "metadata"}
           poster={!autoplay && posterUrl ? posterUrl : undefined}
           aria-label={autoplay ? caption || "Background video" : undefined}
-        />
+        >
+          Seu navegador não suporta reprodução de vídeo.
+        </video>
       </div>
       {caption && <p class="text-sm text-muted-foreground font-sans text-center mt-3">{caption}</p>}
     </Container>
