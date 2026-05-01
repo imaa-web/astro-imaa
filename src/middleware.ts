@@ -1,18 +1,28 @@
 import { fetchSiteSettings } from "@/lib/data/fetch-site-settings";
+import type { SITE_SETTINGS_QUERY_RESULT } from "@/lib/sanity.types";
 import { defineMiddleware } from "astro:middleware";
+
+let buildTimeCache: SITE_SETTINGS_QUERY_RESULT | null | undefined = undefined;
 
 export const onRequest = defineMiddleware(async ({ locals, request, rewrite }, next) => {
   const pathname = new URL(request.url).pathname;
   const isApiRoute = pathname.startsWith("/api/");
+  const isPreview = import.meta.env.PUBLIC_DEPLOY_MODE === "preview";
 
   try {
-    locals.siteSettings = await fetchSiteSettings();
+    if (isPreview) {
+      locals.siteSettings = await fetchSiteSettings();
+    } else {
+      if (buildTimeCache === undefined) {
+        buildTimeCache = await fetchSiteSettings();
+      }
+      locals.siteSettings = buildTimeCache;
+    }
   } catch (error) {
     console.error("Failed to fetch site settings:", error instanceof Error ? error.message : "Unknown error");
 
     locals.siteSettings = null;
 
-    // API routes return JSON errors, not HTML rewrites
     if (isApiRoute) {
       return new Response(JSON.stringify({ success: false, error: "Service temporarily unavailable" }), {
         status: 503,
@@ -30,11 +40,10 @@ export const onRequest = defineMiddleware(async ({ locals, request, rewrite }, n
   const response = await next();
 
   response.headers.set("X-Content-Type-Options", "nosniff");
-  response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Permissions-Policy", "camera=(), microphone=()");
 
-  if (import.meta.env.PUBLIC_DEPLOY_MODE === "preview") {
+  if (isPreview) {
     response.headers.set("Cache-Control", "no-store");
   }
 
