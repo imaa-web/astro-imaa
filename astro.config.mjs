@@ -14,25 +14,26 @@ import sitemap from "@astrojs/sitemap";
 const { PUBLIC_DEPLOY_MODE } = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "PUBLIC_");
 const isPreview = PUBLIC_DEPLOY_MODE === "preview";
 
-const adapterConfig = isPreview
-  ? {
-      output: "server",
-      adapter: cloudflare({ imageService: "passthrough" }),
-    }
-  : {
-      adapter: cloudflare({ imageService: "compile" }),
-    };
-
 // https://astro.build/config
 export default defineConfig({
   site: "https://www.institutomaestroabiud.org.br",
 
-  ...adapterConfig,
+  ...(isPreview && {
+    output: "server",
+    adapter: cloudflare({
+      imageService: "passthrough",
+    }),
+  }),
+
+  ...(!isPreview && {
+    adapter: cloudflare({
+      imageService: "compile",
+    }),
+  }),
 
   integrations: [react(), sitemap()],
 
   vite: {
-    // @ts-ignore
     plugins: [tailwindcss()],
   },
 
