@@ -1,5 +1,6 @@
 ---
 import { extractYouTubeId } from "@/lib/utils/video-utils";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface Props {
   node: {
@@ -16,14 +17,16 @@ const videoId = node.url ? extractYouTubeId(node.url) : null;
 {
   videoId && (
     <figure class="my-8 flex flex-col items-center">
-      <iframe
-        src={`https://www.youtube-nocookie.com/embed/${videoId}`}
-        title={node.caption || "YouTube video"}
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-        referrerpolicy="strict-origin-when-cross-origin"
-        class="w-full rounded-xl shadow-md aspect-video bg-zinc-900"
-      />
+      <AspectRatio ratio={16 / 9} className="relative w-full overflow-hidden rounded-xl bg-zinc-900 shadow-md">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+          title={node.caption || "YouTube video"}
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          referrerpolicy="strict-origin-when-cross-origin"
+          class="absolute inset-0 h-full w-full"
+        />
+      </AspectRatio>
       {node.caption && <figcaption class="text-sm text-zinc-500 mt-3 text-center italic">{node.caption}</figcaption>}
     </figure>
   )
