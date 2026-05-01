@@ -9,8 +9,7 @@ import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import "yet-another-react-lightbox/styles.css";
 import { GalleryCarousel } from "./GalleryCarousel";
-import { GalleryGrid2 } from "./GalleryGrid2";
-import { GalleryGrid3 } from "./GalleryGrid3";
+import { GalleryGrid } from "./GalleryGrid";
 import { isValidImage, type ValidGalleryImage } from "./GalleryItem";
 import { GalleryMasonry } from "./GalleryMasonry";
 
@@ -46,9 +45,9 @@ export default function Gallery({
       <div className="container mx-auto px-4 max-w-7xl">
         {heading && <h2 className="heading-2 mb-8 text-center">{heading}</h2>}
 
-        {layout === "grid2" && <GalleryGrid2 images={validImages} onOpen={setLightboxIndex} />}
+        {layout === "grid2" && <GalleryGrid images={validImages} onOpen={setLightboxIndex} cols={2} />}
 
-        {layout === "grid3" && <GalleryGrid3 images={validImages} onOpen={setLightboxIndex} />}
+        {layout === "grid3" && <GalleryGrid images={validImages} onOpen={setLightboxIndex} cols={3} />}
 
         {layout === "masonry" && <GalleryMasonry images={validImages} onOpen={setLightboxIndex} />}
 
