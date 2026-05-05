@@ -65,3 +65,18 @@ const seoSettings: SeoSettings = {
     <BackToTopButton />
   </body>
 </html>
+
+<script>
+  function initVideoReloadFix() {
+    document.querySelectorAll("video[data-video-reload-fix]").forEach((v) => {
+      if (!(v instanceof HTMLVideoElement)) return;
+      if (!v.querySelector("source[src]") && !v.getAttribute("src")) return;
+
+      const shouldReload = v.readyState === 0 || v.error !== null;
+      if (shouldReload) v.load();
+    });
+  }
+
+  initVideoReloadFix();
+  document.addEventListener("astro:page-load", initVideoReloadFix);
+</script>
