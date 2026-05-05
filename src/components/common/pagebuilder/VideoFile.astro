@@ -8,6 +8,7 @@ type Props = PageBuilderBlockOf<"videoFile">;
 const { file, posterImage, caption, autoplay = false } = Astro.props;
 
 const videoUrl = file?.url ?? null;
+const videoMimeType = file?.mimeType?.trim() || "video/mp4";
 const posterUrl = posterImage?.asset
   ? urlFor(posterImage).width(1280).height(720).fit("crop").crop("focalpoint").auto("format").url()
   : null;
@@ -18,7 +19,6 @@ const posterUrl = posterImage?.asset
     <Container size="md" class="py-pagebuilder">
       <div class="relative rounded-2xl overflow-hidden shadow-lg aspect-video bg-black">
         <video
-          src={videoUrl}
           class="w-full h-full object-contain"
           controls={!autoplay}
           autoplay={autoplay}
@@ -29,6 +29,7 @@ const posterUrl = posterImage?.asset
           poster={!autoplay && posterUrl ? posterUrl : undefined}
           aria-label={autoplay ? caption || "Background video" : undefined}
         >
+          <source src={videoUrl} type={videoMimeType} />
           Seu navegador não suporta reprodução de vídeo.
         </video>
       </div>
